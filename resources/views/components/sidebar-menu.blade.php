@@ -1,6 +1,6 @@
 <!-- BEGIN: Sidebar -->
 <div
-        x-data="{
+    x-data="{
         isCollapsed: false,
         toggleSidebar() {
             const appWrapper = document.querySelector('.app-wrapper');
@@ -29,7 +29,7 @@
             document.body.classList.remove('overflow-hidden');
         }
      }"
-        class="sidebar-wrapper group w-0 hidden xl:w-[248px] xl:block">
+    class="sidebar-wrapper group w-0 hidden xl:w-[248px] xl:block">
     <div @click="bodyOverlay" id="bodyOverlay"
          class="w-screen h-screen fixed top-0 bg-slate-900 bg-opacity-50 backdrop-blur-sm z-10 hidden">
     </div>
@@ -64,16 +64,18 @@
             </li>
             <!-- Database -->
             <li>
-                <a href="#" class="navItem {{ (request()->is('database-backups*')) ? 'active' : '' }}">
+                <a href="{{ route("gold-stock") }}"
+                   class="navItem {{ (request()->is('gold-stock*')) ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="iconoir:commodity"></iconify-icon>
-                        <span>{{ __('Gold Stocks') }}</span>
+                        <span>{{ __('Gold Stock') }}</span>
                     </span>
                 </a>
             </li>
             <!-- Database -->
             <li>
-                <a href="#" class="navItem {{ (request()->is('database-backups*')) ? 'active' : '' }}">
+                <a href="#"
+                   class="navItem {{ (request()->is('database-backups*')) ? 'active' : '' }}">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="iconoir:database-backup"></iconify-icon>
                         <span>{{ __('Database Backup') }}</span>
@@ -123,7 +125,8 @@
                 </div>
             </div>
             <div class="mt-6">
-                <button class="bg-white hover:bg-opacity-80 text-slate-900 text-sm font-Inter rounded-md w-full block py-2 font-medium">
+                <button
+                    class="bg-white hover:bg-opacity-80 text-slate-900 text-sm font-Inter rounded-md w-full block py-2 font-medium">
                     Upgrade
                 </button>
             </div>

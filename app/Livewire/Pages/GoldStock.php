@@ -10,13 +10,13 @@ class GoldStock extends Component
 {
     public $breadcrumbItems = [
         [
-            'name' => 'Gold Stocks',
+            'name' => 'Gold Stock',
             'url' => '/gold-stock',
             'active' => true,
         ],
     ];
 
-    public $pageTitle = 'Gold Stocks';
+    public $pageTitle = 'Gold Stock';
 
     public $tableData;
 

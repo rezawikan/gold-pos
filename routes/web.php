@@ -8,12 +8,12 @@ Route::get('home', function () {
 });
 
 Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index']);
-Route::get('/gold-stock', \App\Livewire\Pages\GoldStock::class);
+Route::get('/gold-stock', \App\Livewire\Pages\GoldStock::class)->name('gold-stock');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+//Route::view('dashboard', 'dashboard')
+//    ->middleware(['auth', 'verified'])
+//    ->name('dashboard');
 
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
+//Route::view('profile', 'profile')
+//    ->middleware(['auth'])
+//    ->name('profile');

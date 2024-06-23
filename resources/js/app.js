@@ -27,8 +27,8 @@ new DataTable("#data-table, .data-table", {
     ordering: true,
     info: false,
     searching: true,
-    lengthChange: true,
-    lengthMenu: [10, 25, 50, 100],
+    lengthChange: false,
+    // lengthMenu: [10, 25, 50, 100],
     language: {
         lengthMenu: "Show _MENU_ entries",
         paginate: {
