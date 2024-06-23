@@ -66,6 +66,15 @@
             <li>
                 <a href="#" class="navItem {{ (request()->is('database-backups*')) ? 'active' : '' }}">
                     <span class="flex items-center">
+                        <iconify-icon class=" nav-icon" icon="iconoir:commodity"></iconify-icon>
+                        <span>{{ __('Gold Stocks') }}</span>
+                    </span>
+                </a>
+            </li>
+            <!-- Database -->
+            <li>
+                <a href="#" class="navItem {{ (request()->is('database-backups*')) ? 'active' : '' }}">
+                    <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="iconoir:database-backup"></iconify-icon>
                         <span>{{ __('Database Backup') }}</span>
                     </span>
