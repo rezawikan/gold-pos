@@ -19,10 +19,12 @@ class GoldStock extends Component
     public $pageTitle = 'Gold Stock';
 
     public $tableData;
+    public $today;
 
     public function mount(ProductService $productService): void
     {
         $this->tableData = $productService->all();
+        $this->today = now()->format('Y-m-d');
     }
 
     #[Layout('components.layouts.app')]
