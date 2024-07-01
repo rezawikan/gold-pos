@@ -38,6 +38,11 @@ class ProductRepository implements ProductRepositoryInterface
             products.updated_at,
             products.created_at
         ')
+            ->withCasts([
+                'price_updated_at' => 'datetime',
+                'created_at' => 'datetime',
+                'updated_at' => 'datetime',
+            ])
             ->get();
     }
 }
