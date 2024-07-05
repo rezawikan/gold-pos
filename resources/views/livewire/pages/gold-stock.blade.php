@@ -6,6 +6,18 @@
 
         <div class=" space-y-5">
             <div class="card">
+                @if($status)
+                    <div class="alert alert-success light-mode">
+                        <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                            <iconify-icon class="text-2xl flex-0" icon="system-uicons:target"></iconify-icon>
+                            <p class="flex-1 font-Inter"> {{$status}} </p>
+                            <div class="flex-0 text-xl cursor-pointer">
+                                <iconify-icon wire:click="closeStatus" icon="line-md:close"
+                                              class="relative top-[4px]"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <div class="card-body px-6 pb-6">
                     <div class="overflow-x-auto -mx-6 dashcode-data-table">
                         <span class=" col-span-8  hidden"></span>
@@ -40,7 +52,8 @@
                                         </th>
                                     </tr>
                                     </thead>
-                                    <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+                                    <tbody
+                                        class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
                                     @foreach($tableData as $item)
                                         <tr>
                                             <td class="table-td">{{ $item->id }}</td>
@@ -53,8 +66,9 @@
                                             </td>
                                             <td class="table-td ">{{ currencyFormatterIDR($item->price) }}</td>
                                             <td class="table-td ">
-                                                <div class="{{ $today == $item->price_updated_at?->format('Y-m-d') ? 'text-amber-500' : '' }}">
-                                                    {{  $item->price_updated_at ? $item->price_updated_at : '-' }}
+                                                <div
+                                                    class="{{ $today == $item->price_updated_at?->format('Y-m-d') ? 'text-amber-500' : '' }}">
+                                                    {{  $item->price_updated_at ?? '-' }}
                                                 </div>
                                             </td>
                                             <td class="table-td ">
@@ -68,15 +82,20 @@
                                                        data-twe-ripple-init
                                                     >
                                                         <iconify-icon
-                                                                class="m-auto text-slate-800 dark:text-white text-xl dark:hidden block"
-                                                                icon="heroicons-outline:dots-vertical"></iconify-icon>
+                                                            class="m-auto text-slate-800 dark:text-white text-xl block"
+                                                            icon="heroicons-outline:dots-vertical"></iconify-icon>
                                                     </a>
                                                     <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show]:block dark:bg-surface-dark"
                                                         aria-labelledby="dropdownMenuButton2"
                                                         data-twe-dropdown-menu-ref>
                                                         <li>
-                                                            <a class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-surface-dark dark:text-white dark:hover:bg-neutral-800/25 dark:focus:bg-neutral-800/25 dark:active:bg-neutral-800/25"
+                                                            <a @click="$dispatch('add-stock',{id:{{$item->id}}})"
+                                                               class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-surface-dark dark:text-white dark:hover:bg-neutral-800/25 dark:focus:bg-neutral-800/25 dark:active:bg-neutral-800/25"
                                                                href="#"
+                                                               data-twe-toggle="modal"
+                                                               data-twe-target="#addStockModal"
+                                                               data-twe-ripple-init
+                                                               data-twe-ripple-color="light"
                                                                data-twe-dropdown-item-ref>
                                                                 Add Stock
                                                             </a>
@@ -101,5 +120,17 @@
                 </div>
             </div>
         </div>
+        <livewire:forms.gold-stock-form/>
     </div>
 </div>
+
+
+@script
+<script>
+    $wire.on('refresh-products', () => {
+        const myModalEl = document.getElementById("addStockModal");
+        const modal = Modal.getOrCreateInstance(myModalEl);
+        modal.hide();
+    });
+</script>
+@endscript
