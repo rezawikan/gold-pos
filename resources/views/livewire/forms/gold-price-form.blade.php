@@ -1,10 +1,11 @@
 <div wire:ignore.self
      data-twe-modal-init
      class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
-     id="addStockModal"
+     id="addPriceModal"
      tabindex="-1"
-     aria-labelledby="addStockModalLabel"
+     aria-labelledby="addPriceModalLabel"
      aria-hidden="true">
+
     <div
         data-twe-modal-dialog-ref
         class="pointer-events-none relative w-auto transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]">
@@ -14,7 +15,7 @@
                 class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4 dark:border-white/10">
                 <h5
                     class="text-xl font-medium leading-normal text-surface dark:text-white"
-                    id="addStockModalLabel">
+                    id="addPriceModalLabel">
                     {{ $formTitle }}
                 </h5>
                 <button
@@ -48,34 +49,22 @@
                                 <input value="{{ $product?->name }}" id="readonly" type="text" class="form-control"
                                        placeholder="You can't change me.(Readonly)" readonly="readonly"></div>
                             <div class="input-area">
-                                <label for="basedPrice" class="form-label">Based Price *</label>
+                                <label for="basedPrice" class="form-label">Price *</label>
                                 <div class="relative">
-                                    <input wire:model="basedPrice" id="basedPrice" type="text" class="form-control"
-                                           placeholder="Based Price">
-                                    @error('basedPrice')
+                                    <input wire:model="price" id="price" type="text" class="form-control"
+                                           placeholder="Price">
+                                    @error('price')
                                     <iconify-icon
                                         class="absolute top-1/2 right-3 -translate-y-1/2 text-danger-500 text-xl"
                                         icon="mdi:warning-octagon-outline"></iconify-icon>
                                     @enderror
                                 </div>
-                                @error('basedPrice')
+                                @error('price')
                                 <span
                                     class="font-Inter text-sm text-danger-500 pt-2 inline-block">{{ $message }}</span>
                                 @enderror
-                            </div>
-                            <div class="input-area">
-                                <label for="stock" class="form-label">Stock *</label>
-                                <div class="relative">
-                                    <input wire:model="stock" id="stock" type="text" class="form-control"
-                                           placeholder="Stock">
-                                    @error('stock')
-                                    <iconify-icon
-                                        class="absolute top-1/2 right-3 -translate-y-1/2 text-danger-500 text-xl"
-                                        icon="mdi:warning-octagon-outline"></iconify-icon>
-                                    @enderror
-
-                                </div>
-                                @error('stock')
+                                <br>
+                                @error('date')
                                 <span
                                     class="font-Inter text-sm text-danger-500 pt-2 inline-block">{{ $message }}</span>
                                 @enderror
@@ -98,12 +87,12 @@
                     Close
                 </button>
                 <button
-                    wire:click="addStock"
+                    wire:click="updatePrice"
                     type="button"
                     class="ms-1 inline-block rounded bg-body-dark btn justify-center btn-sm btn-outline px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:shadow-primary-2 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
                     data-twe-ripple-init
                     data-twe-ripple-color="light">
-                    Add Stock
+                    Add Price
                 </button>
             </div>
         </div>
@@ -112,16 +101,9 @@
 
 @script
 <script>
-    const basePrice = document.getElementById("basedPrice");
-    const stock = document.getElementById("stock");
-    basePrice.addEventListener('input', (e) => {
-        basePrice.value = formatNumeral(e.target.value, {
-            numeralThousandsGroupStyle: 'thousand',
-        })
-    })
-
-    stock.addEventListener('input', (e) => {
-        stock.value = formatNumeral(e.target.value, {
+    const price = document.getElementById("price");
+    price.addEventListener('input', (e) => {
+        price.value = formatNumeral(e.target.value, {
             numeralThousandsGroupStyle: 'thousand',
         })
     })

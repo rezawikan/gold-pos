@@ -33,6 +33,16 @@ class GoldStockForm extends Component
         $this->stock = null;
     }
 
+    #[On('add-stock-close')]
+    public function close(): void
+    {
+        $this->reset();
+        $this->resetValidation();
+    }
+
+    /**
+     * @return void
+     */
     public function addStock(): void
     {
         $this->validate();

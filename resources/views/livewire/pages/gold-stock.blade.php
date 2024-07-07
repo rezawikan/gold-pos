@@ -101,10 +101,15 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-surface-dark dark:text-white dark:hover:bg-neutral-800/25 dark:focus:bg-neutral-800/25 dark:active:bg-neutral-800/25"
+                                                            <a @click="$dispatch('update-price',{id:{{$item->id}}})"
+                                                               class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-surface-dark dark:text-white dark:hover:bg-neutral-800/25 dark:focus:bg-neutral-800/25 dark:active:bg-neutral-800/25"
                                                                href="#"
+                                                               data-twe-toggle="modal"
+                                                               data-twe-target="#addPriceModal"
+                                                               data-twe-ripple-init
+                                                               data-twe-ripple-color="light"
                                                                data-twe-dropdown-item-ref>
-                                                                Price Update
+                                                                Add Today's Price
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -121,16 +126,32 @@
             </div>
         </div>
         <livewire:forms.gold-stock-form/>
+        <livewire:forms.gold-price-form/>
     </div>
 </div>
 
 
 @script
 <script>
+    const addStockModalEl = document.getElementById("addStockModal");
+    const addStockModal = Modal.getOrCreateInstance(addStockModalEl);
     $wire.on('refresh-products', () => {
-        const myModalEl = document.getElementById("addStockModal");
-        const modal = Modal.getOrCreateInstance(myModalEl);
-        modal.hide();
+        addStockModal.hide();
     });
+
+    addStockModalEl.addEventListener("hidden.twe.modal", () => {
+        $wire.dispatch('add-stock-close');
+    });
+
+    const addPriceModalEl = document.getElementById("addPriceModal");
+    const addPriceModal = Modal.getOrCreateInstance(addPriceModalEl);
+    $wire.on('refresh-products-add-price', () => {
+        addPriceModal.hide();
+    });
+
+    addPriceModalEl.addEventListener("hidden.twe.modal", () => {
+        $wire.dispatch('add-price-close');
+    });
+
 </script>
 @endscript
