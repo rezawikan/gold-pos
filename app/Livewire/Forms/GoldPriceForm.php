@@ -4,6 +4,7 @@ namespace App\Livewire\Forms;
 
 use App\Models\Product;
 use App\Rules\DateExistRule;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -55,11 +56,11 @@ class GoldPriceForm extends Component
 
         Product::find($this->product->id)->product_prices()
             ->create([
-                'price' => $this->price,
+                'price' => (int) Str::replace(',', '', $this->price),
                 'date' => $this->date,
             ]);
 
-        $this->dispatch('refresh-products-add-price', status: 'Successfully added new price for '.$this->product->name);
+        $this->dispatch('refresh-products', status: 'Successfully added new price for '.$this->product->name);
         $this->reset();
     }
 }

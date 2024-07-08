@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Product;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -49,8 +50,8 @@ class GoldStockForm extends Component
 
         $id = $this->product->id;
         Product::find($id)->product_items()->create([
-            'stock' => $this->stock,
-            'based_price' => (int) $this->basedPrice,
+            'stock' => (int) Str::replace(',', '', $this->stock),
+            'based_price' => (int) Str::replace(',', '', $this->basedPrice),
         ]);
 
         $this->dispatch('refresh-products', status: 'Successfully added stock for '.$this->product->name);

@@ -145,7 +145,7 @@
 
     const addPriceModalEl = document.getElementById("addPriceModal");
     const addPriceModal = Modal.getOrCreateInstance(addPriceModalEl);
-    $wire.on('refresh-products-add-price', () => {
+    $wire.on('refresh-products', () => {
         addPriceModal.hide();
     });
 
