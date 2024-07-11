@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Product;
 use App\Repositories\Interface\ProductRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class ProductRepository implements ProductRepositoryInterface
@@ -12,9 +12,10 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * Show all products with stock
      *
-     * @return Collection
+     * @param  string  $searchText
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function all(): Collection
+    public function all(string $searchText = ''): LengthAwarePaginator
     {
         return Product::leftJoin('product_prices AS current_record', function ($join) {
             $join->on('products.id', '=', 'current_record.product_id')
@@ -30,6 +31,7 @@ class ProductRepository implements ProductRepositoryInterface
                     });
             })
             ->leftJoin('product_items AS PI', 'products.id', '=', 'PI.product_id')
+            ->where('products.name', 'like', '%'.$searchText.'%')
             ->groupBy('products.id', 'products.name', 'products.additional_price', 'products.grams', 'products.updated_at', 'products.created_at')
             ->orderBy('products.id', 'ASC')
             ->selectRaw('
@@ -48,7 +50,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'created_at' => 'datetime',
                 'updated_at' => 'datetime',
             ])
-            ->get();
+            ->paginate(10);
     }
 
     /**

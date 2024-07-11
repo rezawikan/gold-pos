@@ -19,28 +19,26 @@ class GoldStock extends Component
 
     public $pageTitle = 'Gold Stock';
 
-    public $tableData;
+    public $search = '';
 
     public $today;
 
     public $status;
 
-    public function mount(ProductService $productService): void
+    protected $productService;
+
+    public function boot(ProductService $productService): void
     {
-        $this->tableData = $productService->all();
+        $this->productService = $productService;
         $this->today = now()->format('Y-m-d');
     }
 
     #[On('refresh-products')]
-    public function getProducts(ProductService $productService, string $status): void
+    public function refresh(string $status): void
     {
-        $this->tableData = $productService->all();
         $this->status = $status;
     }
 
-    /**
-     * @return void
-     */
     public function closeStatus(): void
     {
         $this->status = null;
@@ -49,6 +47,15 @@ class GoldStock extends Component
     #[Layout('components.layouts.app')]
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application
     {
-        return view('livewire.pages.gold-stock');
+        return view('livewire.pages.gold-stock', [
+            'products' => $this->getProducts(),
+        ]);
     }
+
+    public function getProducts()
+    {
+        return $this->productService->all($this->search);
+    }
+
+
 }

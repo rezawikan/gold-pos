@@ -6,9 +6,14 @@
 
         <div class=" space-y-5">
             <div class="card">
-                <header class=" card-header noborder">
-                    <h4 class="card-title">Hover Table
-                    </h4>
+                <header class="card-header">
+                    <div class="w-full flex justify-between">
+                        <button wire:click="addGoldStock" class="btn btn-sm rounded btn-primary">Add Gold Stock</button>
+                        {{ $search }}
+                        <div class="w-[200px]">
+                            <livewire:forms.search-form wire:model.live="search"/>
+                        </div>
+                    </div>
                 </header>
                 @if($status)
                     <div class="alert alert-success light-mode">
@@ -54,7 +59,7 @@
                                     </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                                    @foreach($tableData as $item)
+                                    @foreach($products as $item)
                                         <tr>
                                             <td class="table-td">{{ $item->id }}</td>
                                             <td class="table-td ">#{{ $item->name }}</td>
@@ -135,6 +140,7 @@
     const addStockModalEl = document.getElementById("addStockModal");
     const addStockModal = Modal.getOrCreateInstance(addStockModalEl);
     $wire.on('refresh-products', () => {
+        $wire.$refresh();
         addStockModal.hide();
     });
 

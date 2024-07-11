@@ -3,10 +3,11 @@
 namespace App\Repositories\Interface;
 
 use App\Models\Product;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ProductRepositoryInterface
 {
-    public function all();
+    public function all(string $searchText = ''): LengthAwarePaginator;
 
     public function addStock(int $id, int $basePrice, int $stock): ?Product;
 
