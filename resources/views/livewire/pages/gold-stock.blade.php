@@ -85,12 +85,12 @@
                                                                 class="m-auto text-slate-800 dark:text-white text-xl block"
                                                                 icon="heroicons-outline:dots-vertical"></iconify-icon>
                                                     </a>
-                                                    <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show]:block dark:bg-surface-dark"
+                                                    <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show]:block dark:bg-slate-700"
                                                         aria-labelledby="dropdownMenuButton2"
                                                         data-twe-dropdown-menu-ref>
                                                         <li>
                                                             <a @click="$dispatch('add-stock',{id:{{$item->id}}})"
-                                                               class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-surface-dark dark:text-white dark:hover:bg-neutral-800/25 dark:focus:bg-neutral-800/25 dark:active:bg-neutral-800/25"
+                                                               class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600 dark:focus:bg-slate-600 dark:active:bg-slate-600"
                                                                href="#"
                                                                data-twe-toggle="modal"
                                                                data-twe-target="#addStockModal"
@@ -102,7 +102,7 @@
                                                         </li>
                                                         <li>
                                                             <a @click="$dispatch('update-price',{id:{{$item->id}}})"
-                                                               class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-surface-dark dark:text-white dark:hover:bg-neutral-800/25 dark:focus:bg-neutral-800/25 dark:active:bg-neutral-800/25"
+                                                               class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600 dark:focus:bg-slate-600 dark:active:bg-slate-600"
                                                                href="#"
                                                                data-twe-toggle="modal"
                                                                data-twe-target="#addPriceModal"
