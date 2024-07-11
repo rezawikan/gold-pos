@@ -6,6 +6,10 @@
 
         <div class=" space-y-5">
             <div class="card">
+                <header class=" card-header noborder">
+                    <h4 class="card-title">Hover Table
+                    </h4>
+                </header>
                 @if($status)
                     <div class="alert alert-success light-mode">
                         <div class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -19,14 +23,11 @@
                     </div>
                 @endif
                 <div class="card-body px-6 pb-6">
-                    <div class="overflow-x-auto -mx-6 dashcode-data-table">
-                        <span class=" col-span-8  hidden"></span>
-                        <span class="  col-span-4 hidden"></span>
+                    <div class="overflow-x-auto -mx-6">
                         <div class="inline-block min-w-full align-middle">
                             <div class="overflow-hidden ">
-                                <table class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700"
-                                       id="data-table">
-                                    <thead class=" border-t border-slate-100 dark:border-slate-800">
+                                <table class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
+                                    <thead class="bg-slate-200 dark:bg-slate-700">
                                     <tr>
                                         <th scope="col" class="table-th">
                                             ID
@@ -52,8 +53,7 @@
                                         </th>
                                     </tr>
                                     </thead>
-                                    <tbody
-                                        class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+                                    <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
                                     @foreach($tableData as $item)
                                         <tr>
                                             <td class="table-td">{{ $item->id }}</td>
@@ -67,7 +67,7 @@
                                             <td class="table-td ">{{ currencyFormatterIDR($item->price) }}</td>
                                             <td class="table-td ">
                                                 <div
-                                                    class="{{ $today == $item->price_updated_at?->format('Y-m-d') ? 'text-amber-500' : '' }}">
+                                                        class="{{ $today == $item->price_updated_at?->format('Y-m-d') ? 'text-amber-500' : '' }}">
                                                     {{  $item->price_updated_at ?? '-' }}
                                                 </div>
                                             </td>
@@ -82,8 +82,8 @@
                                                        data-twe-ripple-init
                                                     >
                                                         <iconify-icon
-                                                            class="m-auto text-slate-800 dark:text-white text-xl block"
-                                                            icon="heroicons-outline:dots-vertical"></iconify-icon>
+                                                                class="m-auto text-slate-800 dark:text-white text-xl block"
+                                                                icon="heroicons-outline:dots-vertical"></iconify-icon>
                                                     </a>
                                                     <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show]:block dark:bg-surface-dark"
                                                         aria-labelledby="dropdownMenuButton2"
@@ -125,11 +125,10 @@
                 </div>
             </div>
         </div>
-        <livewire:forms.gold-stock-form/>
-        <livewire:forms.gold-price-form/>
     </div>
+    <livewire:forms.gold-stock-form/>
+    <livewire:forms.gold-price-form/>
 </div>
-
 
 @script
 <script>
