@@ -6,9 +6,12 @@ use App\Services\ProductService;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class GoldStock extends Component
 {
+    use WithPagination;
+
     public $breadcrumbItems = [
         [
             'name' => 'Gold Stock',
@@ -56,6 +59,4 @@ class GoldStock extends Component
     {
         return $this->productService->all($this->search);
     }
-
-
 }

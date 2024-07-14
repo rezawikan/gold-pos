@@ -58,7 +58,8 @@
                                         </th>
                                     </tr>
                                     </thead>
-                                    <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+                                    <tbody
+                                        class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
                                     @foreach($products as $item)
                                         <tr>
                                             <td class="table-td">{{ $item->id }}</td>
@@ -72,7 +73,7 @@
                                             <td class="table-td ">{{ currencyFormatterIDR($item->price) }}</td>
                                             <td class="table-td ">
                                                 <div
-                                                        class="{{ $today == $item->price_updated_at?->format('Y-m-d') ? 'text-amber-500' : '' }}">
+                                                    class="{{ $today == $item->price_updated_at?->format('Y-m-d') ? 'text-amber-500' : '' }}">
                                                     {{  $item->price_updated_at ?? '-' }}
                                                 </div>
                                             </td>
@@ -87,8 +88,8 @@
                                                        data-twe-ripple-init
                                                     >
                                                         <iconify-icon
-                                                                class="m-auto text-slate-800 dark:text-white text-xl block"
-                                                                icon="heroicons-outline:dots-vertical"></iconify-icon>
+                                                            class="m-auto text-slate-800 dark:text-white text-xl block"
+                                                            icon="heroicons-outline:dots-vertical"></iconify-icon>
                                                     </a>
                                                     <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show]:block dark:bg-slate-700"
                                                         aria-labelledby="dropdownMenuButton2"
@@ -124,6 +125,9 @@
                                     @endforeach
                                     </tbody>
                                 </table>
+                                <div class="flex justify-center mx-5">
+                                    {{ $products->links('livewire::tailwind') }}
+                                </div>
                             </div>
                         </div>
                     </div>
