@@ -25,6 +25,7 @@
         "flatpickr": "^4.6.13",
         "iconify-icon": "^2.1.0",
         "jsvectormap": "^1.5.1",
+        "puppeteer": "^22.13.0",
         "resize-observer-polyfill": "^1.5.1",
         "simplebar": "^6.2.5",
         "tw-elements": "^2.0.0"

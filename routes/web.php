@@ -10,7 +10,7 @@ Route::get('home', function () {
 Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index']);
 Route::get('/gold-stock', \App\Livewire\Pages\GoldStock::class)->name('gold-stock');
 
-//Route::view('dashboard', 'dashboard')
+Route::get('crawler', [\App\Http\Controllers\CrawlerController::class, 'index']);
 //    ->middleware(['auth', 'verified'])
 //    ->name('dashboard');
 
