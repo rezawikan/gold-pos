@@ -15,47 +15,62 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/main.js'])
 </head>
 
-<body class="font-inter dashcode-app bg-black" id="body_class">
-<div class="app-wrapper">
+<body class="min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200">
 
-    <!-- BEGIN: Sidebar Navigation -->
-    <x-sidebar-menu/>
-    <!-- End: Sidebar -->
+{{-- NAVBAR mobile only --}}
+<x-nav sticky class="lg:hidden">
+    <x-slot:brand>
+        <div class="ml-5 pt-5">App</div>
+    </x-slot:brand>
+    <x-slot:actions>
+        <label for="main-drawer" class="lg:hidden mr-3">
+            <x-icon name="o-bars-3" class="cursor-pointer"/>
+        </label>
+    </x-slot:actions>
+</x-nav>
 
-    <!-- BEGIN: Settings -->
-    <x-header.settings/>
-    <!-- End: Settings -->
+{{-- MAIN --}}
+<x-main>
+    {{-- SIDEBAR --}}
+    <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit">
 
-    <div class="flex flex-col justify-between min-h-screen">
-        <div>
-            <!-- BEGIN: header -->
-            <x-layouts.header/>
-            <!-- BEGIN: header -->
+        {{-- BRAND --}}
+        <div class="ml-5 pt-5">App</div>
 
-            <div class="content-wrapper transition-all duration-150 ltr:ml-0 xl:ltr:ml-[248px] rtl:mr-0 xl:rtl:mr-[248px]"
-                 id="content_wrapper">
-                <div class="page-content">
-                    <div class="transition-all duration-150 container-fluid" id="page_layout">
-                        <main id="content_layout">
-                            <!-- Page Content -->
-                            {{ $slot }}
-                        </main>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{-- MENU --}}
+        <x-menu activate-by-route>
 
-        <!-- BEGIN: footer -->
-        <x-layouts.footer/>
-        <!-- BEGIN: footer -->
+            {{-- User --}}
+            @if($user = auth()->user())
+                <x-menu-separator/>
 
-    </div>
-</div>
+                <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover
+                             class="-mx-2 !-my-2 rounded">
+                    <x-slot:actions>
+                        <x-button icon="o-power" class="btn-circle btn-ghost btn-xs" tooltip-left="logoff"
+                                  no-wire-navigate link="/logout"/>
+                    </x-slot:actions>
+                </x-list-item>
 
-<script
-        type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
+                <x-menu-separator/>
+            @endif
 
+            <x-menu-item title="Hello" icon="o-sparkles" link="/"/>
+            <x-menu-sub title="Settings" icon="o-cog-6-tooth">
+                <x-menu-item title="Wifi" icon="o-wifi" link="####"/>
+                <x-menu-item title="Archives" icon="o-archive-box" link="####"/>
+            </x-menu-sub>
+        </x-menu>
+    </x-slot:sidebar>
+
+    {{-- The `$slot` goes here --}}
+    <x-slot:content>
+        {{ $slot }}
+    </x-slot:content>
+</x-main>
+
+{{-- Toast --}}
+<x-toast/>
 @livewireScriptConfig
 
 </body>

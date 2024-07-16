@@ -12,12 +12,15 @@ class GoldStock extends Component
 {
     use WithPagination;
 
-    public $breadcrumbItems = [
-        [
-            'name' => 'Gold Stock',
-            'url' => '/gold-stock',
-            'active' => true,
-        ],
+    public array $sortBy = ['column' => 'id', 'direction' => 'asc'];
+
+    public $headers = [
+        ['key' => 'id', 'label' => '#'],
+        ['key' => 'name', 'label' => 'Name'],
+        ['key' => 'grams', 'label' => 'Grams', 'isSortable' => false],
+        ['key' => 'stock', 'label' => 'Stock'],
+        ['key' => 'price', 'label' => 'Price', 'isSortable' => false],
+        ['key' => 'price_updated_at', 'label' => 'Last Update']
     ];
 
     public $pageTitle = 'Gold Stock';
@@ -57,6 +60,6 @@ class GoldStock extends Component
 
     public function getProducts()
     {
-        return $this->productService->all($this->search);
+        return $this->productService->all($this->search, $this->sortBy);
     }
 }

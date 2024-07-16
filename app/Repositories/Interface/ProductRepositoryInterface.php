@@ -7,7 +7,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ProductRepositoryInterface
 {
-    public function all(string $searchText = ''): LengthAwarePaginator;
+    public function all(string $searchText = '', array $sortBy = []): LengthAwarePaginator;
 
     public function addStock(int $id, int $basePrice, int $stock): ?Product;
 
