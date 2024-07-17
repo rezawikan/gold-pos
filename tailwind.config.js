@@ -11,4 +11,17 @@ export default {
         require('@tailwindcss/typography'),
         require("daisyui")
     ],
+    daisyui: {
+        themes: [
+            {
+                light: {
+                    ...require("daisyui/src/theming/themes")["light"],
+                    "primary": "#00b4d8",
+                    ".input:focus": {
+                        "outline-offset": 0
+                    }
+                },
+            },
+        ],
+    },
 }
