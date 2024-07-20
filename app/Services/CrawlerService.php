@@ -33,11 +33,19 @@ class CrawlerService
             $product = Product::where('grams', $value['grams'])
                 ->where('brand_id', 1)->first();
 
-            $product->product_prices()
-                ->create([
+            $currentProductPrice = $product->product_prices()->whereRaw('Date(date) = CURDATE()');
+            if ($currentProductPrice->exists()) {
+                $currentProductPrice->first()->update([
                     'price' => (int) $value['price'] + (int) $product->additional_price,
                     'date' => now(),
                 ]);
+            } else {
+                $product->product_prices()
+                    ->create([
+                        'price' => (int) $value['price'] + (int) $product->additional_price,
+                        'date' => now(),
+                    ]);
+            }
         }
     }
 }
