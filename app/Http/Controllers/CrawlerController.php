@@ -15,29 +15,16 @@ class CrawlerController extends Controller
         $process = new Process(['node', '../resources/puppeteer/AntamSellCrawler.js']);
         $process->run();
 
-
-
-// executes after the command finishes
+        // executes after the command finishes
         if (!$process->isSuccessful()) {
-//            dd('asd');
             throw new ProcessFailedException($process);
         }
 
 
-        $asd = $process->getOutput();
-        dd($asd);
-//        $process = new Process(['node', 'resources/js/AntamSellCrawler.js']);
-//        $asd
-//        dd($process);
-//        $process->run();
-//        if (! $process->isSuccessful()) {
-//            throw new ProcessFailedException($process);
-//        }
-//
-//        $output = $process->getOutput();
-//        $errors = $process->getErrorOutput();
-//        //        $this->crawlerService->getAntamPriceList('https://www.logammulia.com/id/harga-emas-hari-ini');
+        $result = $process->getOutput();
 
-//        return true;
+        $decodedResult = json_decode(stripslashes($result),true);
+
+        return $decodedResult;
     }
 }
