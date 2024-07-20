@@ -17,10 +17,10 @@ class GoldStock extends Component
     public $headers = [
         ['key' => 'id', 'label' => '#'],
         ['key' => 'name', 'label' => 'Name'],
-        ['key' => 'grams', 'label' => 'Grams', 'isSortable' => false],
+        ['key' => 'grams', 'label' => 'Grams'],
         ['key' => 'stock', 'label' => 'Stock'],
-        ['key' => 'price', 'label' => 'Price', 'isSortable' => false],
-        ['key' => 'price_updated_at', 'label' => 'Last Update']
+        ['key' => 'price', 'label' => 'Price'],
+        ['key' => 'price_updated_at', 'label' => 'Last Update', 'sortable' => false],
     ];
 
     public $pageTitle = 'Gold Stock';

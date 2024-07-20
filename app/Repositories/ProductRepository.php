@@ -12,8 +12,8 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * Show all products with stock
      *
-     * @param string $searchText
-     * @param array $sortBy
+     * @param  string  $searchText
+     * @param  array  $sortBy
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function all(string $searchText = '', array $sortBy = []): LengthAwarePaginator
@@ -32,7 +32,7 @@ class ProductRepository implements ProductRepositoryInterface
                     });
             })
             ->leftJoin('product_items AS PI', 'products.id', '=', 'PI.product_id')
-            ->where('products.name', 'like', '%' . $searchText . '%')
+            ->where('products.name', 'like', '%'.$searchText.'%')
             ->groupBy('products.id', 'products.name', 'products.additional_price', 'products.grams', 'products.updated_at', 'products.created_at')
             ->orderBy(...array_values($sortBy))
             ->selectRaw('
@@ -42,7 +42,7 @@ class ProductRepository implements ProductRepositoryInterface
             products.grams,
             COALESCE(MAX(current_record.price), MAX(latest_record.price)) AS price,
             COALESCE(MAX(current_record.date), MAX(latest_record.date)) AS price_updated_at,
-            SUM(PI.stock) AS stock,
+            COALESCE(SUM(PI.stock), 0) AS stock,
             products.updated_at,
             products.created_at
         ')
@@ -57,9 +57,9 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * Find a product by ID.
      *
-     * @param int $id The product ID.
-     * @param int $basePrice
-     * @param int $stock
+     * @param  int  $id  The product ID.
+     * @param  int  $basePrice
+     * @param  int  $stock
      * @return Product|null
      */
     public function addStock(int $id, int $basePrice, int $stock): ?Product
@@ -73,10 +73,10 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /**
-     * @param int $id The product ID.
-     * @param int $productItemId The product item ID.
-     * @param int $basePrice
-     * @param int $stock
+     * @param  int  $id  The product ID.
+     * @param  int  $productItemId  The product item ID.
+     * @param  int  $basePrice
+     * @param  int  $stock
      * @return int The number of affected rows.
      */
     public function updateStock(int $id, int $productItemId, int $basePrice, int $stock): int
@@ -91,8 +91,8 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /**
-     * @param int $id The product ID.
-     * @param int $productItemId The product item ID.
+     * @param  int  $id  The product ID.
+     * @param  int  $productItemId  The product item ID.
      * @return int The number of affected rows.
      */
     public function deleteStock(int $id, int $productItemId): int
@@ -104,9 +104,9 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /**
-     * @param int $id The product ID.
-     * @param int $price
-     * @param string $date
+     * @param  int  $id  The product ID.
+     * @param  int  $price
+     * @param  string  $date
      * @return int
      */
     public function addPrice(int $id, int $price, string $date): int
@@ -120,10 +120,10 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /**
-     * @param int $id The product ID.
-     * @param int $productPriceId The product price ID.
-     * @param int $price
-     * @param string $date
+     * @param  int  $id  The product ID.
+     * @param  int  $productPriceId  The product price ID.
+     * @param  int  $price
+     * @param  string  $date
      * @return int
      */
     public function updatePrice(int $id, int $productPriceId, int $price, string $date): int

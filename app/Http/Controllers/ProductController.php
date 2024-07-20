@@ -37,13 +37,11 @@ class ProductController extends Controller
         products.grams,
         COALESCE(MAX(current_record.price), MAX(latest_record.price)) AS price,
         COALESCE(MAX(current_record.date), MAX(latest_record.date)) AS price_updated_at,
-        SUM(PI.stock) AS stock,
+        COALESCE(SUM(PI.stock), 0) AS stock,
         products.updated_at,
         products.created_at
     ')
             ->get();
-
-        return view('welcome');
     }
 
     /**

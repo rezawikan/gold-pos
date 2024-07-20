@@ -5,23 +5,21 @@ export default {
         "./resources/**/*.js",
         "./resources/**/*.vue",
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
-        "./vendor/robsontenorio/mary/src/View/Components/**/*.php"
+        "./vendor/robsontenorio/mary/src/View/Components/**/*.php",
     ],
-    plugins: [
-        require('@tailwindcss/typography'),
-        require("daisyui")
-    ],
+    plugins: [require("@tailwindcss/typography"), require("daisyui")],
+    darkMode: "class",
     daisyui: {
         themes: [
             {
                 light: {
                     ...require("daisyui/src/theming/themes")["light"],
-                    "primary": "#00b4d8",
+                    primary: "#00b4d8",
                     ".input:focus": {
-                        "outline-offset": 0
-                    }
+                        "outline-offset": 0,
+                    },
                 },
             },
         ],
     },
-}
+};

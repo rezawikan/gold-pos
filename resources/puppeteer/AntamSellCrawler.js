@@ -4,8 +4,8 @@ import puppeteer from "puppeteer";
     // Launch the browser and open a new blank page
     const browser = await puppeteer.launch({
         headless: false,
-        userDataDir:
-            "C:\\Users\\rezaw\\AppData\\Local\\Google\\Chrome\\User Data",
+        // userDataDir:
+        //     "C:\\Users\\rezaw\\AppData\\Local\\Google\\Chrome\\User Data",
     });
     const page = await browser.newPage();
 
@@ -100,25 +100,25 @@ import puppeteer from "puppeteer";
         data = data.map((x) => {
             const cleanedString = x[0].replace("gr", "").trim();
             return {
-                gram: parseFloat(cleanedString),
+                grams: parseFloat(cleanedString),
                 price: parseInt(x[1].replace(/,/g, "")),
                 price_with_fee: parseInt(x[2].replace(/,/g, "")),
             };
         });
 
-        const emasBatangan = {
+        const batangan = {
             title: tbody[1].querySelector("th").textContent,
-            data: data.slice(0, 10),
+            data: data.slice(0, 9),
         };
 
-        const emasGiftSeries = {
+        const giftSeries = {
             title: tbody[14].querySelector("th").textContent,
             data: data.slice(13, 15),
         };
 
         return JSON.stringify({
-            emas_batangan: emasBatangan,
-            emas_gift_series: emasGiftSeries,
+            batangan: batangan,
+            gift_series: giftSeries,
         });
     });
     console.log(emasBatangan);

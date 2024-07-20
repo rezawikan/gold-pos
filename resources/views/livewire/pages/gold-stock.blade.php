@@ -12,7 +12,24 @@
         :headers="$headers"
         :rows="$products"
         striped
-        @row-click="alert($event.detail.name)"
         with-pagination
-        :sort-by="$sortBy" />
+        :sort-by="$sortBy">
+        @scope("cell_price", $product)
+            {{ currencyFormatterIDR($product->price) }}
+        @endscope
+
+        @scope("cell_stock", $product)
+            {{ numberFormatter($product->stock) }}
+        @endscope
+
+        @scope("cell_price_updated_at", $product)
+            <div class="flex items-center">
+                {{ $product->price_updated_at->format("d M Y H:i:s") }}
+                <div
+                    class="{{ now()->format("Y-m-d") == $product->price_updated_at?->format("Y-m-d") ? "text-green-500" : "text-red-500" }} pl-2">
+                    <x-icon name="m-check-circle" />
+                </div>
+            </div>
+        @endscope
+    </x-table>
 </div>
