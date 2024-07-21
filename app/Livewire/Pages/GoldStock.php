@@ -18,6 +18,8 @@ class GoldStock extends Component
     public $headers = [
         ['key' => 'id', 'label' => '#'],
         ['key' => 'name', 'label' => 'Name'],
+        ['key' => 'brand', 'label' => 'Brand'],
+        ['key' => 'type', 'label' => 'Type'],
         ['key' => 'grams', 'label' => 'Grams'],
         ['key' => 'stock', 'label' => 'Stock'],
         ['key' => 'price', 'label' => 'Price'],
@@ -76,7 +78,7 @@ class GoldStock extends Component
                 });
                 $this->filterCount++;
             } else {
-                $first = array_slice($this->headers, 0, 3);
+                $first = array_slice($this->headers, 0, 5);
                 $res = array_slice($this->headers, -2, 2, true);
                 $this->headers = array_merge($first, [['key' => 'stock', 'label' => 'Stock']], $res);
                 $this->filterCount--;

@@ -32,13 +32,16 @@ class ProductRepository implements ProductRepositoryInterface
                     });
             })
             ->leftJoin('product_items AS PI', 'products.id', '=', 'PI.product_id')
+            ->leftJoin('brands AS BA', 'products.brand_id', '=', 'BA.id')
+            ->leftJoin('types AS TP', 'products.type_id', '=', 'TP.id')
             ->where('products.name', 'like', '%'.$searchText.'%')
             ->groupBy('products.id', 'products.name', 'products.additional_price', 'products.grams', 'products.updated_at', 'products.created_at')
             ->orderBy(...array_values($sortBy))
             ->selectRaw('
             products.id,
             products.name,
-            products.additional_price,
+            BA.name AS brand,
+            TP.name AS type,
             products.grams,
             COALESCE(MAX(current_record.price), MAX(latest_record.price)) AS price,
             COALESCE(MAX(current_record.date), MAX(latest_record.date)) AS price_updated_at,

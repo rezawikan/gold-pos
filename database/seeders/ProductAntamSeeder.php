@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Brand;
 use App\Models\Product;
+use App\Models\Type;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -21,10 +22,23 @@ class ProductAntamSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
+        Type::upsert([
+            ['id' => 1, 'name' => 'Bar Series'],
+            ['id' => 2, 'name' => 'Gift Series'],
+        ],
+            [
+                'created_at' => now(),
+                'updated_at' => now(),
+            ], [
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
         Product::upsert(
             [
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 0.5 gr',
                     'slug' => Str::slug('Emas Antam Batangan 0.5 gr'),
                     'additional_price' => 10000,
@@ -32,6 +46,7 @@ class ProductAntamSeeder extends Seeder
                 ],
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 1 gr',
                     'slug' => Str::slug('Emas Antam Batangan 1 gr'),
                     'additional_price' => 10000,
@@ -39,6 +54,7 @@ class ProductAntamSeeder extends Seeder
                 ],
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 2 gr',
                     'slug' => Str::slug('Emas Antam Batangan 2 gr'),
                     'additional_price' => 20000,
@@ -46,6 +62,7 @@ class ProductAntamSeeder extends Seeder
                 ],
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 3 gr',
                     'slug' => Str::slug('Emas Antam Batangan 3 gr'),
                     'additional_price' => 20000,
@@ -53,6 +70,7 @@ class ProductAntamSeeder extends Seeder
                 ],
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 5 gr',
                     'slug' => Str::slug('Emas Antam Batangan 5 gr'),
                     'additional_price' => 30000,
@@ -60,6 +78,7 @@ class ProductAntamSeeder extends Seeder
                 ],
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 10 gr',
                     'slug' => Str::slug('Emas Antam Batangan 10 gr'),
                     'additional_price' => 30000,
@@ -67,6 +86,7 @@ class ProductAntamSeeder extends Seeder
                 ],
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 25 gr',
                     'slug' => Str::slug('Emas Antam Batangan 25 gr'),
                     'additional_price' => 50000,
@@ -74,6 +94,7 @@ class ProductAntamSeeder extends Seeder
                 ],
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 50 gr',
                     'slug' => Str::slug('Emas Antam Batangan 50 gr'),
                     'additional_price' => 100000,
@@ -81,6 +102,7 @@ class ProductAntamSeeder extends Seeder
                 ],
                 [
                     'brand_id' => 1,
+                    'type_id' => 1,
                     'name' => 'Emas Antam Batangan 100 gr',
                     'slug' => Str::slug('Emas Antam Batangan 100 gr'),
                     'additional_price' => 100000,

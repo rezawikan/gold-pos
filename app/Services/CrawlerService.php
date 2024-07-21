@@ -29,9 +29,16 @@ class CrawlerService
                 ), true)
         );
 
-        foreach ($decodedResult['batangan']['data'] as $value) {
+        $this->updateProductPriceBars($decodedResult['batangan']['data']);
+    }
+
+    protected function updateProductPriceBars(array $data): void
+    {
+        foreach ($data as $value) {
             $product = Product::where('grams', $value['grams'])
-                ->where('brand_id', 1)->first();
+                ->where('brand_id', 1)
+                ->where('type_id', 1)
+                ->first();
 
             $currentProductPrice = $product->product_prices()->whereRaw('Date(date) = CURDATE()');
             if ($currentProductPrice->exists()) {
