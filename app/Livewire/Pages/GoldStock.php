@@ -24,6 +24,12 @@ class GoldStock extends Component
         ['key' => 'price_updated_at', 'label' => 'Last Update'],
     ];
 
+    public $filters = [
+        'hide_stock' => false,
+    ];
+
+    public $filterCount = 0;
+
     public $pageTitle = 'Gold Stock';
 
     public $search = '';
@@ -32,7 +38,10 @@ class GoldStock extends Component
 
     public $status;
 
+    public bool $showDrawerFilter = false;
+
     protected $productService;
+
     protected $crawlerService;
 
     public function boot(ProductService $productService, CrawlerService $crawlerService): void
@@ -51,6 +60,30 @@ class GoldStock extends Component
     public function closeStatus(): void
     {
         $this->status = null;
+    }
+
+    /**
+     * Apply the filters.
+     *
+     * @return void
+     */
+    public function applyFilters(): void
+    {
+        foreach ($this->filters as $key => $value) {
+            if ($key == 'hide_stock' && $value) {
+                $this->headers = array_filter($this->headers, function ($header) {
+                    return $header['key'] != 'stock';
+                });
+                $this->filterCount++;
+            } else {
+                $first = array_slice($this->headers, 0, 3);
+                $res = array_slice($this->headers, -2, 2, true);
+                $this->headers = array_merge($first, [['key' => 'stock', 'label' => 'Stock']], $res);
+                $this->filterCount--;
+            }
+        }
+
+        $this->showDrawerFilter = false;
     }
 
     /**
