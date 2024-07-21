@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages;
 
+use App\Services\CrawlerService;
 use App\Services\ProductService;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -32,9 +33,11 @@ class GoldStock extends Component
     public $status;
 
     protected $productService;
+    protected $crawlerService;
 
-    public function boot(ProductService $productService): void
+    public function boot(ProductService $productService, CrawlerService $crawlerService): void
     {
+        $this->crawlerService = $crawlerService;
         $this->productService = $productService;
         $this->today = now()->format('Y-m-d');
     }
@@ -48,6 +51,16 @@ class GoldStock extends Component
     public function closeStatus(): void
     {
         $this->status = null;
+    }
+
+    /**
+     * Get the Antam price list from the specified URL.
+     *
+     * @return void
+     */
+    public function updatePrice(): void
+    {
+        $this->crawlerService->getAntamPriceList();
     }
 
     #[Layout('components.layouts.app')]
