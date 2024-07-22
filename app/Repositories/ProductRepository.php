@@ -35,7 +35,7 @@ class ProductRepository implements ProductRepositoryInterface
             ->leftJoin('brands AS BA', 'products.brand_id', '=', 'BA.id')
             ->leftJoin('types AS TP', 'products.type_id', '=', 'TP.id')
             ->where('products.name', 'like', '%'.$searchText.'%')
-            ->groupBy('products.id', 'products.name', 'products.additional_price', 'products.grams', 'products.updated_at', 'products.created_at')
+            ->groupBy('products.id', 'products.name', 'products.additional_sell_price', 'products.additional_buy_price', 'products.grams', 'products.updated_at', 'products.created_at')
             ->orderBy(...array_values($sortBy))
             ->selectRaw('
             products.id,

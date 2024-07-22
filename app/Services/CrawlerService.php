@@ -43,15 +43,15 @@ class CrawlerService
             $currentProductPrice = $product->product_prices()->whereRaw('Date(date) = CURDATE()');
             if ($currentProductPrice->exists()) {
                 $currentProductPrice->first()->update([
-                    'sell_price' => (int) $value['price'] + (int) $product->additional_price,
-                    'buy_price' => $buybackPrice * $product->grams,
+                    'sell_price' => (int) $value['price'] + $product->additional_sell_price,
+                    'buy_price' => ($buybackPrice * $product->grams) + ($product->additional_buy_price * $product->grams),
                     'date' => now(),
                 ]);
             } else {
                 $product->product_prices()
                     ->create([
-                        'sell_price' => (int) $value['price'] + (int) $product->additional_price,
-                        'buy_price' => $buybackPrice * $product->grams,
+                        'sell_price' => (int) $value['price'] + $product->additional_sell_price,
+                        'buy_price' => ($buybackPrice * $product->grams) + ($product->additional_buy_price * $product->grams),
                         'date' => now(),
                     ]);
             }

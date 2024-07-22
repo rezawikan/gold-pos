@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('type_id')->constrained('types');
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->integer('additional_price')->nullable();
+            $table->integer('additional_sell_price')->nullable();
+            $table->integer('additional_buy_price')->nullable();
             $table->double('grams');
             $table->timestamps();
         });

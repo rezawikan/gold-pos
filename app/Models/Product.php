@@ -20,7 +20,8 @@ class Product extends Model
         'type_id',
         'name',
         'slug',
-        'additional_price',
+        'additional_sell_price',
+        'additional_buy_price',
         'grams',
     ];
 
