@@ -15,7 +15,7 @@ class CrawlerService
      */
     public function getAntamPriceList(): void
     {
-        $process = new Process(['node', '../resources/puppeteer/AntamSellCrawler.js']);
+        $process = new Process(['node', '../resources/puppeteer/AntamCrawler.js']);
         $process->run();
 
         // executes after the command finishes
@@ -29,27 +29,29 @@ class CrawlerService
                 ), true)
         );
 
-        $this->updateProductPriceBars($decodedResult['batangan']['data']);
+        $this->updatePrice($decodedResult['batangan']['data'], $decodedResult['buyback_price'], 1, 1);
     }
 
-    protected function updateProductPriceBars(array $data): void
+    protected function updatePrice(array $data, int $buybackPrice, int $brandId, int $typeId): void
     {
         foreach ($data as $value) {
             $product = Product::where('grams', $value['grams'])
-                ->where('brand_id', 1)
-                ->where('type_id', 1)
+                ->where('brand_id', $brandId)
+                ->where('type_id', $typeId)
                 ->first();
 
             $currentProductPrice = $product->product_prices()->whereRaw('Date(date) = CURDATE()');
             if ($currentProductPrice->exists()) {
                 $currentProductPrice->first()->update([
-                    'price' => (int) $value['price'] + (int) $product->additional_price,
+                    'sell_price' => (int) $value['price'] + (int) $product->additional_price,
+                    'buy_price' => $buybackPrice * $product->grams,
                     'date' => now(),
                 ]);
             } else {
                 $product->product_prices()
                     ->create([
-                        'price' => (int) $value['price'] + (int) $product->additional_price,
+                        'sell_price' => (int) $value['price'] + (int) $product->additional_price,
+                        'buy_price' => $buybackPrice * $product->grams,
                         'date' => now(),
                     ]);
             }

@@ -22,7 +22,8 @@ class GoldStock extends Component
         ['key' => 'type', 'label' => 'Type'],
         ['key' => 'grams', 'label' => 'Grams'],
         ['key' => 'stock', 'label' => 'Stock'],
-        ['key' => 'price', 'label' => 'Price'],
+        ['key' => 'sell_price', 'label' => 'Sell Price'],
+        ['key' => 'buy_price', 'label' => 'Buy Price'],
         ['key' => 'price_updated_at', 'label' => 'Last Update'],
     ];
 
@@ -39,6 +40,7 @@ class GoldStock extends Component
     public $today;
 
     public $status;
+    public $statusType;
 
     public bool $showDrawerFilter = false;
 
@@ -54,14 +56,10 @@ class GoldStock extends Component
     }
 
     #[On('refresh-products')]
-    public function refresh(string $status): void
+    public function refresh(string $status, string $statusType): void
     {
         $this->status = $status;
-    }
-
-    public function closeStatus(): void
-    {
-        $this->status = null;
+        $this->statusType = $statusType;
     }
 
     /**
@@ -73,14 +71,22 @@ class GoldStock extends Component
     {
         foreach ($this->filters as $key => $value) {
             if ($key == 'hide_stock' && $value) {
-                $this->headers = array_filter($this->headers, function ($header) {
-                    return $header['key'] != 'stock';
-                });
+
+                $this->headers = array_map(function ($header) {
+                    if ($header['key'] == 'stock') {
+                        return ['key' => 'stock', 'label' => 'Stock', 'hidden' => true];
+                    }
+                    return $header;
+                }, $this->headers);
+
                 $this->filterCount++;
             } else {
-                $first = array_slice($this->headers, 0, 5);
-                $res = array_slice($this->headers, -2, 2, true);
-                $this->headers = array_merge($first, [['key' => 'stock', 'label' => 'Stock']], $res);
+                $this->headers = array_map(function ($header) {
+                    if ($header['key'] == 'stock') {
+                        return ['key' => 'stock', 'label' => 'Stock', 'hidden' => false];
+                    }
+                    return $header;
+                }, $this->headers);
                 $this->filterCount--;
             }
         }
@@ -95,7 +101,13 @@ class GoldStock extends Component
      */
     public function updatePrice(): void
     {
-        $this->crawlerService->getAntamPriceList();
+        try {
+            $this->crawlerService->getAntamPriceList();
+        } catch (\Exception $exception) {
+            $this->dispatch('refresh-products', status: $exception->getMessage(), statusType: 'warning');
+        }
+
+        $this->refresh(status: 'The price has been updated', statusType: 'success');
     }
 
     #[Layout('components.layouts.app')]

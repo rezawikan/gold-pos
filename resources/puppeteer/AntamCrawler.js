@@ -8,6 +8,9 @@ import puppeteer from "puppeteer";
         //     "C:\\Users\\rezaw\\AppData\\Local\\Google\\Chrome\\User Data",
     });
     const page = await browser.newPage();
+    const buttonSubmitLocationSelector = "input[value='SIMPAN PERUBAHAN']";
+    const buttonLocationSelector = ".btn-location";
+    const select2Selector = ".select2-basic";
 
     // await page.setGeolocation({ latitude: -8.65, longitude: 115.216667 });
 
@@ -46,9 +49,9 @@ import puppeteer from "puppeteer";
     // Set screen size
     await page.setViewport({ width: 1080, height: 1024 });
 
-    await page.waitForSelector(".btn-location");
-    await page.click(".btn-location");
-    await page.waitForSelector(".select2-basic");
+    await page.waitForSelector(buttonLocationSelector);
+    await page.click(buttonLocationSelector);
+    await page.waitForSelector(select2Selector);
 
     // Delay mode
     // await page.evaluate(async () => {
@@ -64,8 +67,8 @@ import puppeteer from "puppeteer";
     });
 
     await Promise.all([
-        page.waitForSelector("input[value='SIMPAN PERUBAHAN']"),
-        page.click("input[value='SIMPAN PERUBAHAN']"),
+        page.waitForSelector(buttonSubmitLocationSelector),
+        page.click(buttonSubmitLocationSelector),
         page.waitForNavigation({ waitUntil: "load" }), // The promise resolves after navigation has finished
     ]);
 
@@ -116,12 +119,51 @@ import puppeteer from "puppeteer";
             data: data.slice(13, 15),
         };
 
-        return JSON.stringify({
+        return {
             batangan: batangan,
             gift_series: giftSeries,
+        };
+    });
+
+    // Navigate the page to a URL
+    await page.goto("https://www.logammulia.com/id/sell/gold");
+
+    await page.evaluate(async () => {
+        await new Promise(function (resolve) {
+            setTimeout(resolve, 5000);
         });
     });
-    console.log(emasBatangan);
+
+    await page.waitForSelector(buttonLocationSelector);
+    await page.click(buttonLocationSelector);
+    await page.waitForSelector(select2Selector);
+
+    await page.evaluate(() => {
+        $(".select2-basic").select2("open");
+        $(".select2-basic").val("DPS01").trigger("change");
+        $(".select2-basic").select2("close");
+    });
+
+    await Promise.all([
+        page.waitForSelector(buttonSubmitLocationSelector),
+        page.click(buttonSubmitLocationSelector),
+        page.waitForNavigation({ waitUntil: "load" }), // The promise resolves after navigation has finished
+    ]);
+
+    const buybackPrice = await page.evaluate(() => {
+        const price = document.querySelector(
+            ".chart-info > .ci-child > .value",
+        );
+
+        return price.textContent.replace(/Rp|,/g, "").trim();
+    });
+
+    let result = JSON.stringify({
+        ...emasBatangan,
+        buyback_price: buybackPrice,
+    });
+
+    console.log(result);
 
     await browser.close();
 })();
