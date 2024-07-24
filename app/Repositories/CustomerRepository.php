@@ -21,4 +21,15 @@ class CustomerRepository implements CustomerRepositoryInterface
             ->orderBy(...array_values($sortBy))
             ->paginate(10);
     }
+
+    /**
+     * Find a customer by id
+     *
+     * @param  int  $id
+     * @return \App\Models\Customer|null
+     */
+    public function find(int $id): ?Customer
+    {
+        return Customer::find($id);
+    }
 }

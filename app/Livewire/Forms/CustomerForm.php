@@ -3,10 +3,15 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Customer;
-use Livewire\Component;
+use Illuminate\Validation\Rule;
+use Livewire\Form;
 
-class CustomerForm extends Component
+class CustomerForm extends Form
 {
+    public ?Customer $customer;
+
+    public $isEditMode = false;
+
     public $name;
 
     public $email;
@@ -15,52 +20,79 @@ class CustomerForm extends Component
 
     public $address;
 
-    public $isEditMode;
-
-    public $customerId;
-
-    public function mount($isEditMode = false, $customerId = null): void
-    {
-        $this->isEditMode = $isEditMode;
-        $this->customerId = $customerId;
-    }
-
+    /**
+     * Return the validation rules that apply to the request.
+     *
+     * @return array|string[]
+     */
     public function rules(): array
     {
-        return [
-            'name' => 'required',
-            'email' => 'required|email|unique:customers,email',
-            'phone_number' => 'required',
-            'address' => 'required',
-        ];
+        if (! $this->isEditMode) {
+            return [
+                'name' => 'required',
+                'email' => 'required|unique:customers',
+                'phone_number' => 'required',
+                'address' => 'required',
+            ];
+        } else {
+            return [
+                'name' => 'required',
+                'email' => [
+                    'required',
+                    Rule::unique('customers')->ignore($this->customer),
+                ],
+                'phone_number' => 'required',
+                'address' => 'required',
+            ];
+        }
+
     }
 
-    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application
+    /**
+     * Set the customer.
+     *
+     * @param  \App\Models\Customer  $customer
+     * @return void
+     */
+    public function setCustomer(Customer $customer): void
     {
-        return view('livewire.forms.customer-form');
+        $this->customer = $customer;
+        $this->name = $customer->name;
+        $this->email = $customer->email;
+        $this->phone_number = $customer->phone_number;
+        $this->address = $customer->address;
+        $this->isEditMode = true;
     }
 
-    public function submit(): void
+    /**
+     * Store the customer.
+     *
+     * @return \App\Models\Customer
+     */
+    public function store(): Customer
     {
         $this->validate();
-        $customer = Customer::find($this->customerId) ?? new Customer;
-        if ($this->isEditMode) {
-            $customer = $customer->update([
-                'name' => $this->name,
-                'email' => $this->email,
-                'phone_number' => $this->phone_number,
-                'address' => $this->address,
-            ]);
-            $this->dispatch('refresh-customers', status: 'Successfully updated the customer - '.$customer->name, statusType: 'success');
-        } else {
-            $customer = $customer->create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'phone_number' => $this->phone_number,
-                'address' => $this->address,
-            ]);
-            $this->dispatch('refresh-customers', status: 'Successfully added a new customer - '.$customer->name, statusType: 'success');
-        }
+
+        $customer = Customer::create(
+            $this->pull()
+        );
+
+        $this->reset();
+
+        return $customer;
+    }
+
+    /**
+     * Update the customer.
+     *
+     * @return void
+     */
+    public function update(): void
+    {
+        $this->validate();
+
+        $this->customer->update($this->all());
+
         $this->reset();
     }
 }

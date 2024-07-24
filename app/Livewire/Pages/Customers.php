@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages;
 
+use App\Livewire\Forms\CustomerForm;
 use App\Services\CustomerService;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -12,6 +13,8 @@ class Customers extends Component
     public $titlePage = 'Customers';
 
     public $subTitlePage = 'Loyal shoppers, vital heartbeat.';
+
+    public CustomerForm $form;
 
     public $search = '';
 
@@ -32,14 +35,14 @@ class Customers extends Component
 
     public bool $showDrawerFilter = false;
 
+    public bool $isEditMode = false;
+
     // Modal
     public $titleModal = 'Add Customer';
 
     public $subtitleModal = 'Add new customer';
 
     public bool $customerModal = false;
-
-    public bool $isEditModeCustomerModal = false;
 
     protected $customerService;
 
@@ -61,16 +64,38 @@ class Customers extends Component
         return $this->customerService->all($this->search, $this->sortBy);
     }
 
+    public function save(): void
+    {
+        $this->validate();
+
+        if ($this->isEditMode) {
+            $this->form->update();
+            $this->dispatch('refresh-customers', status: 'Successfully updated the customer', statusType: 'success');
+        } else {
+            $customer = $this->form->store();
+            $this->dispatch('refresh-customers', status: 'Successfully added a new customer - '.$customer->name, statusType: 'success');
+        }
+    }
+
+    public function updateCustomer($id): void
+    {
+        $customer = $this->customerService->find($id);
+        $this->titleModal = 'Update Customer';
+        $this->subtitleModal = 'Update customer '.$customer->name;
+        $this->form->setCustomer($customer);
+        $this->openModal(true);
+    }
+
     public function openModal($isEditMode = false): void
     {
         $this->customerModal = true;
-        $this->isEditModeCustomerModal = $isEditMode;
+        $this->isEditMode = $isEditMode;
     }
 
     #[On('refresh-customers')]
     public function refresh(string $status, string $statusType): void
     {
-        $this->isEditModeCustomerModal = false;
+        $this->isEditMode = false;
         $this->customerModal = false;
         $this->status = $status;
         $this->statusType = $statusType;
