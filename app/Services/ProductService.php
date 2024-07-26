@@ -11,17 +11,15 @@ class ProductService
     /**
      * Constructs a new instance of the class.
      *
-     * @param ProductRepositoryInterface $productRepository The product repository interface.
+     * @param  ProductRepositoryInterface  $productRepository  The product repository interface.
      */
-    public function __construct(protected ProductRepositoryInterface $productRepository)
-    {
-    }
+    public function __construct(protected ProductRepositoryInterface $productRepository) {}
 
     /**
      * Retrieve all products.
      *
-     * @param string $searchText
-     * @param array $sortBy
+     * @param  string  $searchText
+     * @param  array  $sortBy
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function all(string $searchText = '', array $sortBy = []): LengthAwarePaginator
@@ -30,9 +28,20 @@ class ProductService
     }
 
     /**
-     * @param int $id
-     * @param int $basePrice
-     * @param int $stock
+     * Retrieve a product by id.
+     *
+     * @param  string  $id
+     * @return \App\Models\Product
+     */
+    public function find(string $id): Product
+    {
+        return $this->productRepository->find($id);
+    }
+
+    /**
+     * @param  int  $id
+     * @param  int  $basePrice
+     * @param  int  $stock
      * @return \App\Models\Product|null
      */
     public function addStock(int $id, int $basePrice, int $stock): ?Product
@@ -41,10 +50,10 @@ class ProductService
     }
 
     /**
-     * @param int $id
-     * @param int $productItemId
-     * @param int $basePrice
-     * @param int $stock
+     * @param  int  $id
+     * @param  int  $productItemId
+     * @param  int  $basePrice
+     * @param  int  $stock
      * @return int
      */
     public function updateStock(int $id, int $productItemId, int $basePrice, int $stock): int

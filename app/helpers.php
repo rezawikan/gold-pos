@@ -20,10 +20,11 @@ function currencyFormatterIDR($amount): false|string
  * @param  float  $amount  The number to format
  * @return false|string The formatted number as a string, or false on failure
  */
-function numberFormatter($amount): false|string
+function numberFormatter(float $amount): false|string
 {
     $formatter = new NumberFormatter('id_ID', NumberFormatter::DEFAULT_STYLE);
     $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
+    $formatter->setSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL, ',');
 
     return $formatter->format($amount);
 }

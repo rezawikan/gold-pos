@@ -7,9 +7,11 @@ use App\Repositories\CustomerRepository;
 use App\Repositories\Interface\CustomerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\ProductRepository;
+use App\Services\BrandService;
 use App\Services\CrawlerService;
 use App\Services\CustomerService;
 use App\Services\ProductService;
+use App\Services\TypeService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CrawlerService::class, CrawlerService::class);
+        $this->app->bind(BrandService::class, BrandService::class);
+        $this->app->bind(TypeService::class, TypeService::class);
 
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductService::class, function ($app) {

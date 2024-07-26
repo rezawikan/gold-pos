@@ -12,6 +12,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 //        ->name('profile');
     Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index']);
     Route::get('/gold-stock', \App\Livewire\Pages\GoldStock::class)->name('gold-stock');
+    Route::get('/gold-stock/update/{id}', \App\Livewire\Pages\UpdateGold::class)->name('update-gold');
     Route::get('/customers', \App\Livewire\Pages\Customers::class)->name('customers');
     Route::get('crawler', [\App\Http\Controllers\CrawlerController::class, 'index']);
 });

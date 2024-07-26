@@ -24,17 +24,26 @@
     @if ($status && $statusType)
         <x-alert
             icon="o-exclamation-triangle"
-            :class="'alert-' . $statusType"
+            :class="'mb-5 alert-' . $statusType"
             dismissible>
             {{ $status }}
+        </x-alert>
+    @endif
+
+    @if (session("status"))
+        <x-alert
+            icon="o-exclamation-triangle"
+            :class="'mb-5 alert-' . session('statusType')"
+            dismissible>
+            {{ session("status") }}
         </x-alert>
     @endif
 
     <x-table
         :headers="$headers"
         :rows="$products"
-        striped
         with-pagination
+        link="gold-stock/update/{id}"
         :sort-by="$sortBy">
         @scope("cell_sell_price", $product)
             {{ currencyFormatterIDR($product->sell_price) }}

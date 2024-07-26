@@ -61,6 +61,17 @@ class ProductRepository implements ProductRepositoryInterface
     /**
      * Find a product by ID.
      *
+     * @param  string  $id
+     * @return \App\Models\Product
+     */
+    public function find(string $id): Product
+    {
+        return Product::find($id);
+    }
+
+    /**
+     * Find a product by ID.
+     *
      * @param  int  $id  The product ID.
      * @param  int  $basePrice
      * @param  int  $stock
