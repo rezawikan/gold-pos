@@ -44,6 +44,8 @@ class GoldStock extends Component
 
     public bool $showDrawerFilter = false;
 
+    public bool $goldStockModal = false;
+
     protected $productService;
 
     protected $crawlerService;
@@ -60,6 +62,12 @@ class GoldStock extends Component
     {
         $this->status = $status;
         $this->statusType = $statusType;
+    }
+
+    // TODO
+    public function openModal($isEditMode = false): void
+    {
+        $this->goldStockModal = true;
     }
 
     /**

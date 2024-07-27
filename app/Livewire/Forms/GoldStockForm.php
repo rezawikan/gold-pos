@@ -2,17 +2,15 @@
 
 namespace App\Livewire\Forms;
 
-use App\Models\Product;
-use Illuminate\Support\Str;
-use Livewire\Attributes\On;
+use App\Models\ProductItem;
 use Livewire\Attributes\Validate;
-use Livewire\Component;
+use Livewire\Form;
 
-class GoldStockForm extends Component
+class GoldStockForm extends Form
 {
-    public $formTitle;
+    public ?ProductItem $productItem;
 
-    public $product;
+    public $isEditMode = false;
 
     #[Validate('required')]
     public $basedPrice;
@@ -20,41 +18,34 @@ class GoldStockForm extends Component
     #[Validate('required')]
     public $stock;
 
-    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application
+    /**
+     * Set the product item.
+     *
+     * @param  \App\Models\ProductItem  $productItem
+     * @return void
+     */
+    public function setProductItem(ProductItem $productItem): void
     {
-        return view('livewire.forms.gold-stock-form');
-    }
-
-    #[On('add-stock')]
-    public function edit($id): void
-    {
-        $this->formTitle = 'Add New Stock';
-        $this->product = Product::find($id);
-        $this->basedPrice = null;
-        $this->stock = null;
-    }
-
-    #[On('add-stock-close')]
-    public function close(): void
-    {
-        $this->reset();
-        $this->resetValidation();
+        $this->productItem = $productItem;
+        $this->isEditMode = true;
+        $this->basedPrice = numberFormatter($productItem->based_price);
+        $this->stock = numberFormatter($productItem->stock);
     }
 
     /**
+     * Update the gold stock.
+     *
      * @return void
      */
-    public function addStock(): void
+    public function update(): void
     {
         $this->validate();
 
-        $id = $this->product->id;
-        Product::find($id)->product_items()->create([
-            'stock' => (int) Str::replace(',', '', $this->stock),
-            'based_price' => (int) Str::replace(',', '', $this->basedPrice),
+        $this->productItem->update([
+            ...$this->only('stock'),
+            'based_price' => removeAlphabets($this->basedPrice),
         ]);
 
-        $this->dispatch('refresh-products', status: 'Successfully added stock for '.$this->product->name);
         $this->reset();
     }
 }

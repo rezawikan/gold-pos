@@ -1,71 +1,163 @@
 <div>
     <x-header title="Update Product" subtitle="{{$product?->name}}"></x-header>
-    <x-form wire:submit="save">
-        <x-input
-            label="Name"
-            wire:model="form.name"
-            wire:keyup="generateSlug" />
-        <x-input label="Slug" wire:model="form.slug" readonly disabled />
-        <x-select
-            label="Type"
-            icon="m-cube-transparent"
-            :options="$types"
-            option-value="name"
-            wire:model="form.type_id" />
-        <x-select
-            label="Brand"
-            icon="s-swatch"
-            :options="$brands"
-            option-value="name"
-            wire:model="form.brand_id" />
-        <div>
-            <label class="label">
-                <span class="label-text text-base">Additional Price</span>
-            </label>
-            <input
-                placeholder="Additional Price"
-                class="price input input-bordered input-primary w-full"
-                wire:model="form.additional_sell_price" />
-            <x-forms.input-error
-                :messages="$errors->get('form.additional_sell_price')"
-                class="mt-2" />
-        </div>
-        <div>
-            <label class="label">
-                <span class="label-text text-base">
-                    Additional Buyback Price per Gram
-                </span>
-            </label>
-            <input
-                placeholder="Buyback Price per Gram"
-                class="price input input-bordered input-primary w-full"
-                wire:model="form.additional_buy_price" />
-            <x-forms.input-error
-                :messages="$errors->get('form.additional_buy_price')"
-                class="mt-2" />
-        </div>
-        <x-input label="Grams" wire:model="form.grams" />
+    <div class="grid grid-cols-2 gap-4">
+        <x-card
+            title="Selected Product"
+            subtitle="Update your detail here"
+            shadow
+            separator>
+            <x-form wire:submit="save">
+                <x-input
+                    label="Name"
+                    wire:model="form.name"
+                    wire:keyup="generateSlug" />
+                <x-input
+                    label="Slug"
+                    wire:model="form.slug"
+                    readonly
+                    disabled />
+                <x-select
+                    label="Type"
+                    icon="m-cube-transparent"
+                    :options="$types"
+                    option-value="name"
+                    wire:model="form.type_id" />
+                <x-select
+                    label="Brand"
+                    icon="s-swatch"
+                    :options="$brands"
+                    option-value="name"
+                    wire:model="form.brand_id" />
+                <div>
+                    <label class="label">
+                        <span class="label-text text-base">
+                            Additional Price
+                        </span>
+                    </label>
+                    <input
+                        placeholder="Additional Price"
+                        class="input input-bordered input-primary w-full"
+                        wire:keyup="generateDelimiters('form','additional_sell_price')"
+                        wire:model="form.additional_sell_price" />
+                    <x-forms.input-error
+                        :messages="$errors->get('form.additional_sell_price')"
+                        class="mt-2" />
+                </div>
+                <div>
+                    <label class="label">
+                        <span class="label-text text-base">
+                            Additional Buyback Price per Gram
+                        </span>
+                    </label>
+                    <input
+                        placeholder="Buyback Price per Gram"
+                        class="input input-bordered input-primary w-full"
+                        wire:keyup="generateDelimiters('form','additional_buy_price')"
+                        wire:model="form.additional_buy_price" />
+                    <x-forms.input-error
+                        :messages="$errors->get('form.additional_buy_price')"
+                        class="mt-2" />
+                </div>
+                <x-input label="Grams" wire:model="form.grams" />
+                <x-slot:actions>
+                    <x-button label="Cancel" link="{{ route('gold-stock') }}" />
+                    <x-button
+                        label="Update"
+                        class="btn-primary"
+                        type="submit"
+                        spinner="save" />
+                </x-slot>
+            </x-form>
+        </x-card>
+
+        <!-- ... -->
+        <x-card
+            title="Current Stock"
+            subtitle="Keeping an eye on current stock levels helps businesses manage inventory efficiently."
+            shadow
+            separator>
+            @if ($statusStock && $statusTypeStock)
+                <x-alert
+                    icon="o-exclamation-triangle"
+                    :class="'mb-5 alert-' . $statusTypeStock"
+                    dismissible>
+                    {{ $statusStock }}
+                </x-alert>
+            @endif
+
+            <x-table
+                :headers="$productItemHeaders"
+                :rows="$form->product_items"
+                show-empty-text
+                empty-text="Out of Stock!">
+                @scope("cell_based_price", $product_item)
+                    {{ currencyFormatterIDR($product_item->based_price) }}
+                @endscope
+
+                @scope("cell_stock", $product_item)
+                    {{ numberFormatter($product_item->stock) }}
+                @endscope
+
+                @scope("actions", $product_item)
+                    <div class="flex gap-2">
+                        <x-button
+                            icon="s-pencil-square"
+                            wire:click="openEditModal({{ $product_item->id }}, true)"
+                            spinner
+                            class="btn-sm"
+                            inli />
+                        <x-button
+                            icon="o-trash"
+                            spinner
+                            class="btn-sm"
+                            wire:click="openDeleteModal({{ $product_item->id }})" />
+                    </div>
+                @endscope
+            </x-table>
+        </x-card>
+    </div>
+
+    {{-- Here is modal`s ID --}}
+    <x-modal
+        wire:model="deleteStockModal"
+        :title="'Are you sure delete '.numberFormatter((string)$selectedItemForDelete?->based_price) .' stock?'">
+        <div>You won't be able to revert this!</div>
+
         <x-slot:actions>
-            <x-button label="Cancel" link="{{ route('gold-stock') }}" />
+            {{-- Notice `onclick` is HTML --}}
+            <x-button label="Cancel" @click="$wire.deleteStockModal = false" />
             <x-button
-                label="Update"
+                label="Confirm"
                 class="btn-primary"
-                type="submit"
-                spinner="save" />
+                wire:click="deleteProductItem" />
         </x-slot>
-    </x-form>
+    </x-modal>
+
+    <x-modal
+        wire:model="editStockModal"
+        class="backdrop-blur"
+        title="Update Gold Stock"
+        subtitle="Stock for {{ $product?->name }}"
+        persistent>
+        <x-form wire:submit="updateStock">
+            <x-input
+                label="Based Price"
+                wire:keyup="generateDelimiters('stockForm','basedPrice')"
+                wire:model="stockForm.basedPrice" />
+            <x-input
+                label="Stock"
+                wire:model="stockForm.stock"
+                wire:keyup="generateDelimiters('stockForm','stock')" />
+            <x-slot:actions>
+                <x-button
+                    label="Cancel"
+                    @click="$wire.editStockModal = false" />
+                <x-button
+                    label="Update"
+                    class="btn-primary"
+                    type="submit"
+                    spinner="updateStock" />
+            </x-slot>
+        </x-form>
+    </x-modal>
 </div>
-
-@script
-    <script>
-        const prices = document.querySelectorAll('.price');
-
-        for (const price of prices) {
-            price.addEventListener('input', (e) => {
-                price.value = formatNumeral(e.target.value, {
-                    numeralThousandsGroupStyle: 'thousand',
-                });
-            });
-        }
-    </script>
-@endscript

@@ -3,12 +3,15 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Product;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Livewire\Form;
 
 class GoldForm extends Form
 {
     public ?Product $product;
+
+    public $product_items;
 
     public $isEditMode = false;
 
@@ -67,6 +70,17 @@ class GoldForm extends Form
     }
 
     /**
+     * Set the product items.
+     *
+     * @param  array|Collection  $items
+     * @return void
+     */
+    public function setProductItems(array|Collection $items): void
+    {
+        $this->product_items = $items;
+    }
+
+    /**
      * Store the product.
      *
      * @return \App\Models\Product
@@ -95,9 +109,9 @@ class GoldForm extends Form
         $this->validate();
 
         $this->product->update([
-            ...$this->all(),
-            'additional_sell_price' => intval(str_replace(',', '', $this->additional_sell_price)),
-            'additional_buy_price' => intval(str_replace(',', '', $this->additional_buy_price)),
+            ...$this->only(['brand_id', 'type_id', 'name', 'slug', 'grams']),
+            'additional_sell_price' => intval(removeAlphabets($this->additional_sell_price)),
+            'additional_buy_price' => intval(removeAlphabets($this->additional_buy_price)),
         ]);
 
         $this->reset();

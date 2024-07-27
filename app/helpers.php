@@ -17,14 +17,25 @@ function currencyFormatterIDR($amount): false|string
 /**
  * Format a number using NumberFormatter
  *
- * @param  float  $amount  The number to format
+ * @param  mixed  $amount  The number to format
  * @return false|string The formatted number as a string, or false on failure
  */
-function numberFormatter(float $amount): false|string
+function numberFormatter(mixed $amount): false|string
 {
+    $amount = removeAlphabets($amount);
     $formatter = new NumberFormatter('id_ID', NumberFormatter::DEFAULT_STYLE);
     $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
-    $formatter->setSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL, ',');
 
-    return $formatter->format($amount);
+    return $formatter->format((int) $amount);
+}
+
+/**
+ * Remove alphabets from a string
+ *
+ * @param  string  $string
+ * @return string
+ */
+function removeAlphabets(string $string): string
+{
+    return preg_replace('/[^0-9]/', '', $string);
 }

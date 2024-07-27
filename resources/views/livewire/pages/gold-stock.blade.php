@@ -12,7 +12,11 @@
                 label="Filters"
                 @click="$wire.showDrawerFilter = true"
                 :badge="$filterCount" />
-            <x-button label="Add Stock" icon="o-plus" class="btn-primary" />
+            <x-button
+                label="Add Stock"
+                icon="o-plus"
+                wire:click="openModal"
+                class="btn-primary" />
             <x-button
                 label="Refresh"
                 class="btn-primary"
@@ -33,7 +37,7 @@
     @if (session("status"))
         <x-alert
             icon="o-exclamation-triangle"
-            :class="'mb-5 alert-' . session('statusType')"
+            class="alert-success mb-5"
             dismissible>
             {{ session("status") }}
         </x-alert>
@@ -71,6 +75,35 @@
             </div>
         @endscope
     </x-table>
+
+    <x-modal
+        wire:model="goldStockModal"
+        class="backdrop-blur"
+        persistent
+        title="Add Stock Gold"
+        subtitle="asd"
+        separator>
+        <x-form wire:submit.prevent="save">
+            <x-input label="Name" wire:model="form.name" />
+            {{-- <x-input label="Email" wire:model="form.email" /> --}}
+            {{-- <x-input label="Phone Number" wire:model="form.phone_number" /> --}}
+            {{-- <x-textarea --}}
+            {{-- label="Address" --}}
+            {{-- wire:model="form.address" --}}
+            {{-- placeholder="Your Address .." --}}
+            {{-- hint="Max 100 chars" --}}
+            {{-- rows="2" /> --}}
+
+            <x-slot:actions>
+                <x-button
+                    label="Save"
+                    class="btn-primary"
+                    type="submit"
+                    spinner="save" />
+                <x-button label="Cancel" @click="$wire.customerModal = false" />
+            </x-slot>
+        </x-form>
+    </x-modal>
 
     <x-drawer
         wire:model="showDrawerFilter"
