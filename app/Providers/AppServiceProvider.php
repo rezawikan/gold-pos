@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-
 use App\Repositories\CustomerRepository;
 use App\Repositories\Interface\CustomerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;

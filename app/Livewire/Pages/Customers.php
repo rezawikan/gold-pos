@@ -61,7 +61,7 @@ class Customers extends Component
 
     public function getCustomers()
     {
-        return $this->customerService->all($this->search, $this->sortBy);
+        return $this->customerService->all($this->search, $this->sortBy, true);
     }
 
     public function save(): void

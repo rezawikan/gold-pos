@@ -19,6 +19,7 @@ class UpdateGold extends Component
     public $isEditMode = false;
 
     public $editStockModal = false;
+
     public $deleteStockModal = false;
 
     public $isEditModeStock = false;
@@ -30,6 +31,7 @@ class UpdateGold extends Component
     public ProductItem $selectedItemForDelete;
 
     public $statusStock;
+
     public $statusTypeStock;
 
     public $productItemHeaders = [
@@ -38,15 +40,15 @@ class UpdateGold extends Component
         ['key' => 'stock', 'label' => 'Stock'],
     ];
 
+    public $types;
+
+    public $brands;
+
     protected ProductService $productService;
 
     protected BrandService $brandService;
 
     protected TypeService $typeService;
-
-    public $types;
-
-    public $brands;
 
     /**
      * @param  \App\Services\ProductService  $productService

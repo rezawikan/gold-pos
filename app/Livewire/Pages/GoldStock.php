@@ -40,6 +40,7 @@ class GoldStock extends Component
     public $today;
 
     public $status;
+
     public $statusType;
 
     public bool $showDrawerFilter = false;
@@ -84,6 +85,7 @@ class GoldStock extends Component
                     if ($header['key'] == 'stock') {
                         return ['key' => 'stock', 'label' => 'Stock', 'hidden' => true];
                     }
+
                     return $header;
                 }, $this->headers);
 
@@ -93,6 +95,7 @@ class GoldStock extends Component
                     if ($header['key'] == 'stock') {
                         return ['key' => 'stock', 'label' => 'Stock', 'hidden' => false];
                     }
+
                     return $header;
                 }, $this->headers);
                 $this->filterCount--;

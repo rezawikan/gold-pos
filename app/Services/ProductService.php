@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Repositories\Interface\ProductRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductService
@@ -20,9 +21,9 @@ class ProductService
      *
      * @param  string  $searchText
      * @param  array  $sortBy
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator|Collection
      */
-    public function all(string $searchText = '', array $sortBy = []): LengthAwarePaginator
+    public function all(string $searchText = '', array $sortBy = []): LengthAwarePaginator|Collection
     {
         return $this->productRepository->all($searchText, $sortBy);
     }
