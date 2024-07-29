@@ -60,7 +60,7 @@ class GoldPriceForm extends Component
                 'date' => $this->date,
             ]);
 
-        $this->dispatch('refresh-products', status: 'Successfully added new price for '.$this->product->name);
+        $this->dispatch('refresh-products', status: 'Successfully added new price for '.$this->product->name, statusType: 'success');
         $this->reset();
     }
 }

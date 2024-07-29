@@ -47,7 +47,6 @@
         :headers="$headers"
         :rows="$products"
         with-pagination
-        link="gold-stock/update/{id}"
         :sort-by="$sortBy">
         @scope("cell_sell_price", $product)
             {{ currencyFormatterIDR($product->sell_price) }}

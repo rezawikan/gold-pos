@@ -54,7 +54,7 @@ class Customers extends Component
     #[Layout('components.layouts.app')]
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application
     {
-        return view('livewire.pages.customers', [
+        return view('livewire.pages.customer.customers', [
             'customers' => $this->getCustomers(),
         ]);
     }

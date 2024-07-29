@@ -40,6 +40,17 @@ class ProductService
     }
 
     /**
+     * Get available stock for a product
+     *
+     * @param  int  $id
+     * @return int
+     */
+    public function getAvailableStock(int $id): int
+    {
+        return $this->productRepository->getAvailableStock($id);
+    }
+
+    /**
      * @param  int  $id
      * @param  int  $basePrice
      * @param  int  $stock

@@ -28,7 +28,7 @@ class ProductRepository implements ProductRepositoryInterface
                         $query->select(DB::raw('MAX(date)'))
                             ->from('product_prices')
                             ->whereColumn('product_id', 'latest_record.product_id')
-                            ->where('date', '<', DB::raw('CURDATE()'));
+                            ->latest('latest_record.date');
                     });
             })
             ->leftJoin('product_items AS PI', 'products.id', '=', 'PI.product_id')
@@ -56,6 +56,44 @@ class ProductRepository implements ProductRepositoryInterface
                 'updated_at' => 'datetime',
             ])
             ->paginate(10);
+    }
+
+    /**
+     * Get available stock
+     *
+     * @param  $id
+     * @return int
+     */
+    public function getAvailableStock($id): int
+    {
+        $today = DB::raw('CURDATE()');
+
+        return (int) Product::leftJoin('product_prices AS current_record', function ($join) use ($today) {
+            $join->on('products.id', '=', 'current_record.product_id')
+                ->whereDate('current_record.date', '=', $today);
+        })
+            ->leftJoin('product_prices AS latest_record', function ($join) use ($today) {
+                $join->on('products.id', '=', 'latest_record.product_id')
+                    ->where('latest_record.date', '=', function ($query) use ($today) {
+                        $query->select(DB::raw('MAX(date)'))
+                            ->from('product_prices')
+                            ->whereColumn('product_id', 'latest_record.product_id')
+                            ->where('date', '<', $today);
+                    });
+            })
+            ->leftJoin('product_items AS PI', function ($join) use ($today) {
+                $join->on('products.id', '=', 'PI.product_id')
+                    ->where('PI.based_price', '<=', function ($query) use ($today) {
+                        $query->select(DB::raw('MAX(sell_price)'))
+                            ->from('product_prices')
+                            ->whereDate('date', '=', $today)
+                            ->whereColumn('product_id', 'PI.product_id');
+
+                    });
+            })
+            ->where('products.id', $id)
+            ->selectRaw('COALESCE(SUM(PI.stock), 0) AS stock')
+            ->first()->stock;
     }
 
     /**

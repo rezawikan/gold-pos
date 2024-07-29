@@ -9,6 +9,10 @@ interface ProductRepositoryInterface
 {
     public function all(string $searchText = '', array $sortBy = []): LengthAwarePaginator;
 
+    public function find(string $id): Product;
+
+    public function getAvailableStock(int $id): int;
+
     public function addStock(int $id, int $basePrice, int $stock): ?Product;
 
     public function updateStock(int $id, int $productItemId, int $basePrice, int $stock): int;

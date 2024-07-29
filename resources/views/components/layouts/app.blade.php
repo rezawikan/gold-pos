@@ -68,11 +68,44 @@
                         <x-menu-separator />
                     @endif
 
-                    <x-menu-item title="Hello" icon="o-sparkles" link="/" />
-                    <x-menu-sub title="Settings" icon="o-cog-6-tooth">
-                        <x-menu-item title="Wifi" icon="o-wifi" link="####" />
+                    <x-menu-item
+                        title="Dashboard"
+                        icon="o-chart-pie"
+                        link="/" />
+                    <x-menu-item
+                        title="Gold Stock"
+                        icon="o-cube"
+                        link="{{ route('gold-stock') }}" />
+                    <x-menu-item
+                        title="Customers"
+                        icon="o-sparkles"
+                        link="{{ route('customers') }}" />
+
+                    <x-menu-item
+                        title="Orders"
+                        icon="o-sparkles"
+                        link="{{ route('orders') }}" />
+                    <x-menu-sub
+                        title="Wa
+                    rehouse"
+                        icon="o-building-storefront">
+                        <x-menu-item title="Brand" icon="o-wifi" link="####" />
                         <x-menu-item
-                            title="Archives"
+                            title="Categories"
+                            icon="o-wifi"
+                            link="####" />
+                        <x-menu-item
+                            title="Products"
+                            icon="o-archive-box"
+                            link="####" />
+                    </x-menu-sub>
+                    <x-menu-sub title="Settings" icon="o-cog-6-tooth">
+                        <x-menu-item
+                            title="General"
+                            icon="o-wifi"
+                            link="####" />
+                        <x-menu-item
+                            title="Account"
                             icon="o-archive-box"
                             link="####" />
                     </x-menu-sub>
