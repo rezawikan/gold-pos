@@ -31,5 +31,4 @@ class Order extends Model
     {
         return $this->hasOne(Customer::class);
     }
-
 }

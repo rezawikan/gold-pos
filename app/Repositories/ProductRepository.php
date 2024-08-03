@@ -40,7 +40,7 @@ class ProductRepository implements ProductRepositoryInterface
                         ->where('PI.based_price', '<=', function ($query) {
                             $query->select('sell_price')
                                 ->from('product_prices')
-                                ->latest('date')
+                                ->whereColumn('product_id', 'product_prices.product_id')
                                 ->value('sell_price');
                         });
                 });

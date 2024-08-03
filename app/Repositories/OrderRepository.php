@@ -33,7 +33,7 @@ class OrderRepository implements OrderRepositoryInterface
      * Find order by id
      *
      * @param  int|null  $id
-     * @return \App\Models\Order|null
+     * @return Order|null
      */
     public function find(?int $id): ?Order
     {

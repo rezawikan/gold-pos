@@ -61,6 +61,7 @@ class CreateOrder extends Component
             if ($quantity == 0) {
                 $this->customerService->deleteCart($this->user_searchable_id, $productId);
                 $this->carts = $this->getCarts();
+
                 return;
             }
         }
