@@ -21,8 +21,20 @@
         striped
         with-pagination
         :sort-by="$sortBy">
+        @scope("cell_subtotal", $order)
+        {{ numberFormatter($order->subtotal) }}
+        @endscope
+        @scope("cell_base_subtotal", $order)
+        {{ numberFormatter($order->base_subtotal) }}
+        @endscope
+        @scope("cell_total", $order)
+        {{ numberFormatter($order->total) }}
+        @endscope
+        @scope("cell_profit", $order)
+        {{ numberFormatter($order->profit) }}
+        @endscope
         @scope("cell_created_at", $order)
-            {{ $order->created_at->diffForHumans() }}
+        {{ $order->created_at->diffForHumans() }}
         @endscope
     </x-table>
 </div>

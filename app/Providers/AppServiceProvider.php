@@ -9,6 +9,7 @@ use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\OrderRepository;
 use App\Repositories\ProductRepository;
 use App\Services\BrandService;
+use App\Services\CartService;
 use App\Services\CrawlerService;
 use App\Services\CustomerService;
 use App\Services\OrderService;
@@ -26,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CrawlerService::class, CrawlerService::class);
         $this->app->bind(BrandService::class, BrandService::class);
         $this->app->bind(TypeService::class, TypeService::class);
+        $this->app->bind(CartService::class, function ($app) {
+            return new CartService($app->make(ProductService::class));
+        });
 
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductService::class, function ($app) {

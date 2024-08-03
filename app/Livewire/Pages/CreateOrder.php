@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages;
 
 use App\Models\Customer;
+use App\Services\CartService;
 use App\Services\CustomerService;
 use App\Services\ProductService;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,11 +38,14 @@ class CreateOrder extends Component
 
     protected CustomerService $customerService;
 
+    protected CartService $cartService;
+
     protected ProductService $productService;
 
-    public function boot(CustomerService $customerService, ProductService $productService): void
+    public function boot(CustomerService $customerService, ProductService $productService, CartService $cartService): void
     {
         $this->customerService = $customerService;
+        $this->cartService = $cartService;
         $this->productService = $productService;
     }
 
@@ -52,26 +56,30 @@ class CreateOrder extends Component
 
     public function updateQuantity(int $productId, int $currentQuantity, bool $isIncrement): void
     {
-
-        $availableStock = $this->productService->getAvailableStock($productId);
-        if ($isIncrement) {
-            $quantity = $currentQuantity + 1;
-        } else {
-            $quantity = $currentQuantity - 1;
-            if ($quantity == 0) {
-                $this->customerService->deleteCart($this->user_searchable_id, $productId);
-                $this->carts = $this->getCarts();
-
-                return;
-            }
-        }
-
-        if ($quantity > $availableStock) {
-            $quantity = $availableStock;
-        }
-        $this->customerService->updateQuantity($this->user_searchable_id, $productId, $quantity);
-
+        $this->cartService->updateQuantity($this->user_searchable_id, $productId, $currentQuantity, $isIncrement);
         $this->carts = $this->getCarts();
+    }
+
+    public function addItem(int $productId): void
+    {
+        $this->cartService->addToCart($this->user_searchable_id, $productId);
+        $this->carts = $this->getCarts();
+    }
+
+    public function getTotalPrice(): int
+    {
+        if ($this->carts) {
+            return collect($this->carts)->sum('totalValue');
+        }
+
+        return 0;
+    }
+
+    public function createOrder(): void
+    {
+        $this->cartService->createOrder($this->user_searchable_id);
+
+        $this->redirectRoute('orders');
     }
 
     public function searchCustomers(string $searchText = ''): LengthAwarePaginator|Collection
@@ -94,7 +102,7 @@ class CreateOrder extends Component
 
     public function getCarts()
     {
-        return $this->customerService->getCarts($this->user_searchable_id);
+        return $this->cartService->getCarts($this->user_searchable_id);
     }
 
     public function deleteCustomer(): void

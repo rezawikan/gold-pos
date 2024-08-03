@@ -29,7 +29,10 @@ class Customer extends Model
     {
         return $this->belongsToMany(Product::class, 'cart_customers')
             ->with(['product_prices' => function ($query) {
-                $query->latest('date')->take(1);
+                $query->latest('date')->first();
+            }])
+            ->with(['product_items' => function ($query) {
+                $query->orderBy('based_price', 'desc');
             }])
             ->withPivot('quantity')
             ->withTimestamps();

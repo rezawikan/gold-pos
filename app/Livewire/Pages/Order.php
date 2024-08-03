@@ -18,7 +18,8 @@ class Order extends Component
     public $headers = [
         ['key' => 'id', 'label' => '#'],
         ['key' => 'customer.name', 'label' => 'Name'],
-        ['key' => 'base_subtotal', 'label' => 'Subtotal'],
+        ['key' => 'subtotal', 'label' => 'Subtotal'],
+        ['key' => 'base_subtotal', 'label' => 'Base Subtotal'],
         ['key' => 'discount', 'label' => 'Discount'],
         ['key' => 'total', 'label' => 'Total'],
         ['key' => 'profit', 'label' => 'Profit'],
