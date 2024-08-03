@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
@@ -39,5 +40,15 @@ class Product extends Model
     public function product_prices(): HasMany
     {
         return $this->hasMany(ProductPrice::class);
+    }
+
+    /**
+     * Get the brand that owns the product.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
+     */
+    public function brand(): belongsTo
+    {
+        return $this->belongsTo(Brand::class);
     }
 }

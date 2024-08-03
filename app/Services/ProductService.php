@@ -21,11 +21,13 @@ class ProductService
      *
      * @param  string  $searchText
      * @param  array  $sortBy
+     * @param  bool  $isPaginated
+     * @param  bool  $isReadyForSale
      * @return LengthAwarePaginator|Collection
      */
-    public function all(string $searchText = '', array $sortBy = []): LengthAwarePaginator|Collection
+    public function all(string $searchText = '', array $sortBy = [], bool $isPaginated = false, bool $isReadyForSale = false): LengthAwarePaginator|Collection
     {
-        return $this->productRepository->all($searchText, $sortBy);
+        return $this->productRepository->all($searchText, $sortBy, $isPaginated, $isReadyForSale);
     }
 
     /**

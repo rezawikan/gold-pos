@@ -10,18 +10,40 @@
             <x-button icon="o-plus" class="btn-primary" />
         </x-slot>
     </x-header>
-    <div class="grid grid-cols-5 gap-8">
+    <div class="grid grid-cols-6 gap-8">
         <x-card
             class="col-span-3"
             title="Products"
             subtitle="Our findings about you"
             shadow
             separator>
-            I have title, subtitle, separator and shadow.
+            @foreach ($products as $product)
+                <x-list-item :item="$product" no-separator no-hover>
+                    <x-slot:value>
+                        <div class="flex justify-normal gap-4">
+                            {{ $product->name }}
+                            <x-badge
+                                :value="$product->stock ? '' : 'Out of Stock'"
+                                @class([! $product->stock ? "badge-success" : "hidden", "py-3", "text-xs"]) />
+                        </div>
+                    </x-slot>
+                    <x-slot:sub-value>
+                        {{ $product->grams }} grams -
+                        {{ $product->product_brand }}
+                        - {{ $product->stock }} pcs
+                    </x-slot>
+                    <x-slot:actions>
+                        <x-button
+                            label="Add"
+                            wire:click="addItem({{ $product->id }})"
+                            spinner />
+                    </x-slot>
+                </x-list-item>
+            @endforeach
         </x-card>
-        <div class="col-span-2 grid grid-cols-subgrid gap-8">
+        <div class="col-span-3 grid grid-cols-subgrid gap-8">
             <x-card
-                class="col-span-2"
+                class="col-span-3"
                 title="Customer"
                 shadow
                 separator
@@ -62,27 +84,41 @@
                 </x-slot>
             </x-card>
             <x-card
-                class="col-span-2"
+                class="col-span-3"
                 title="Cart"
                 subtitle="Our findings about you"
                 shadow
                 separator>
-                {{-- @foreach() --}}
-                {{-- <x-list-item :item="$user2" no-separator no-hover> --}}
-                {{-- <x-slot:avatar> --}}
-                {{-- <x-badge value="top user" class="badge-primary" /> --}}
-                {{-- </x-slot:avatar> --}}
-                {{-- <x-slot:value> --}}
-                {{-- Custom value --}}
-                {{-- </x-slot:value> --}}
-                {{-- <x-slot:sub-value> --}}
-                {{-- Custom sub-value --}}
-                {{-- </x-slot:sub-value> --}}
-                {{-- <x-slot:actions> --}}
-                {{-- <x-button icon="o-trash" class="text-red-500" wire:click="delete(1)" spinner /> --}}
-                {{-- </x-slot:actions> --}}
-                {{-- </x-list-item> --}}
-                {{-- @endforeach --}}
+                @if ($carts)
+                    <x-table :headers="$headers" :rows="$carts">
+                        @scope("cell_quantity", $cart)
+                            <div class="relative w-40">
+                                <button
+                                    class="btn btn-square btn-sm absolute left-0 top-0 rounded-r-none"
+                                    wire:click="updateQuantity({{ $cart["id"] }}, {{ $cart["quantity"] }}, false)">
+                                    -
+                                </button>
+                                <input
+                                    type="text"
+                                    class="input input-sm input-bordered w-full px-12 text-center"
+                                    wire:model="carts.{{ $loop->index }}.quantity" />
+                                <button
+                                    class="btn btn-square btn-sm absolute right-0 top-0 rounded-l-none"
+                                    wire:click="updateQuantity({{ $cart["id"] }}, {{ $cart["quantity"] }}, true)">
+                                    +
+                                </button>
+                            </div>
+                        @endscope
+
+                        @scope("cell_sellPrice", $cart)
+                            {{ numberFormatter($cart["sellPrice"]) }}
+                        @endscope
+
+                        @scope("cell_totalValue", $cart)
+                            {{ numberFormatter($cart["totalValue"]) }}
+                        @endscope
+                    </x-table>
+                @endif
             </x-card>
         </div>
     </div>
@@ -104,7 +140,7 @@
                 single
                 searchable />
             <x-slot:actions>
-                <x-button label="Cancel" @click="$wire.cancelCustomer" />
+                <x-button label="Cancel" wire:click="cancelCustomer" />
                 <x-button label="Done" type="submit" spinner="selectCustomer" />
             </x-slot>
         </x-form>

@@ -18,8 +18,8 @@ class GoldStock extends Component
     public $headers = [
         ['key' => 'id', 'label' => '#'],
         ['key' => 'name', 'label' => 'Name'],
-        ['key' => 'brand', 'label' => 'Brand'],
-        ['key' => 'type', 'label' => 'Type'],
+        ['key' => 'product_brand', 'label' => 'Brand'],
+        ['key' => 'product_type', 'label' => 'Type'],
         ['key' => 'grams', 'label' => 'Grams'],
         ['key' => 'stock', 'label' => 'Stock'],
         ['key' => 'sell_price', 'label' => 'Sell Price'],
@@ -131,6 +131,6 @@ class GoldStock extends Component
 
     public function getProducts()
     {
-        return $this->productService->all($this->search, $this->sortBy);
+        return $this->productService->all($this->search, $this->sortBy, true, true);
     }
 }

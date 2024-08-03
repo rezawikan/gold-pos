@@ -39,4 +39,20 @@ class CustomerService
     {
         return $this->customerRepository->find($id);
     }
+
+    public function getCarts(int $customerId): array
+    {
+        return $this->customerRepository->getCarts($customerId);
+    }
+
+    public function deleteCart(int $customerId, int $productId): void
+    {
+        $this->customerRepository->deleteCart($customerId, $productId);
+    }
+
+    public function updateQuantity(int $customerId, int $productId, int $quantity): void
+    {
+        $customer = $this->customerRepository->find($customerId);
+        $this->customerRepository->updateQuantity($customer, $productId, $quantity);
+    }
 }

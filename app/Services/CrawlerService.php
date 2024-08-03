@@ -44,14 +44,14 @@ class CrawlerService
             if ($currentProductPrice->exists()) {
                 $currentProductPrice->first()->update([
                     'sell_price' => (int) $value['price'] + $product->additional_sell_price,
-                    'buy_price' => ($buybackPrice * $product->grams) + ($product->additional_buy_price * $product->grams),
+                    'buy_price' => intval($buybackPrice * $product->grams) + intval($product->additional_buy_price * $product->grams),
                     'date' => now(),
                 ]);
             } else {
                 $product->product_prices()
                     ->create([
                         'sell_price' => (int) $value['price'] + $product->additional_sell_price,
-                        'buy_price' => ($buybackPrice * $product->grams) + ($product->additional_buy_price * $product->grams),
+                        'buy_price' => intval($buybackPrice * $product->grams) + intval($product->additional_buy_price * $product->grams),
                         'date' => now(),
                     ]);
             }
