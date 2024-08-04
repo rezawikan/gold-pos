@@ -6,7 +6,7 @@
             subtitle="Update your detail here"
             shadow
             separator>
-            <x-form wire:submit="save">
+            <x-form wire:submit="update">
                 <x-input
                     label="Name"
                     wire:model="form.name"
@@ -20,13 +20,17 @@
                     label="Type"
                     icon="m-cube-transparent"
                     :options="$types"
-                    option-value="name"
+                    option-value="id"
+                    placeholder="Select a type"
+                    placeholder-value="0"
                     wire:model="form.type_id" />
                 <x-select
                     label="Brand"
                     icon="s-swatch"
                     :options="$brands"
-                    option-value="name"
+                    option-value="id"
+                    placeholder="Select a brands"
+                    placeholder-value="0"
                     wire:model="form.brand_id" />
                 <div>
                     <label class="label">

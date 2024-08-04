@@ -83,17 +83,64 @@
         title="Add Stock Gold"
         subtitle="asd"
         separator>
-        <x-form wire:submit.prevent="save">
-            <x-input label="Name" wire:model="form.name" />
-            {{-- <x-input label="Email" wire:model="form.email" /> --}}
-            {{-- <x-input label="Phone Number" wire:model="form.phone_number" /> --}}
-            {{-- <x-textarea --}}
-            {{-- label="Address" --}}
-            {{-- wire:model="form.address" --}}
-            {{-- placeholder="Your Address .." --}}
-            {{-- hint="Max 100 chars" --}}
-            {{-- rows="2" /> --}}
-
+        {{ json_encode($form) }}
+        <x-form wire:submit.prevent="addStock">
+            <x-input
+                label="Name"
+                wire:model="form.name"
+                wire:keyup.debounce.500ms="generateSlug" />
+            <x-input
+                label="Slug"
+                wire:model="form.slug"
+                readonly
+                disabled />
+            <x-select
+                label="Type"
+                icon="m-cube-transparent"
+                :options="$types"
+                option-value="id"
+                placeholder="Select a type"
+                placeholder-value="0"
+                wire:model="form.type_id" />
+            <x-select
+                label="Brand"
+                icon="s-swatch"
+                :options="$brands"
+                option-value="id"
+                placeholder="Select a brand"
+                placeholder-value="0"
+                wire:model="form.brand_id" />
+            <div>
+                <label class="label">
+                        <span class="label-text text-base">
+                            Additional Price
+                        </span>
+                </label>
+                <input
+                    placeholder="Additional Price"
+                    class="input input-bordered input-primary w-full"
+                    wire:keyup.debounce.500ms="generateDelimiters('form','additional_sell_price')"
+                    wire:model="form.additional_sell_price" />
+                <x-forms.input-error
+                    :messages="$errors->get('form.additional_sell_price')"
+                    class="mt-2" />
+            </div>
+            <div>
+                <label class="label">
+                        <span class="label-text text-base">
+                            Additional Buyback Price per Gram
+                        </span>
+                </label>
+                <input
+                    placeholder="Buyback Price per Gram"
+                    class="input input-bordered input-primary w-full"
+                    wire:keyup="generateDelimiters('form','additional_buy_price')"
+                    wire:model="form.additional_buy_price" />
+                <x-forms.input-error
+                    :messages="$errors->get('form.additional_buy_price')"
+                    class="mt-2" />
+            </div>
+            <x-input label="Grams" wire:model="form.grams" />
             <x-slot:actions>
                 <x-button
                     label="Save"

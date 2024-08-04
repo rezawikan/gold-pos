@@ -13,8 +13,6 @@ class GoldForm extends Form
 
     public $product_items;
 
-    public $isEditMode = false;
-
     public $brand_id;
 
     public $type_id;
@@ -66,7 +64,6 @@ class GoldForm extends Form
         $this->additional_sell_price = numberFormatter($product->additional_sell_price);
         $this->additional_buy_price = numberFormatter($product->additional_buy_price);
         $this->grams = $product->grams;
-        $this->isEditMode = true;
     }
 
     /**
@@ -83,18 +80,19 @@ class GoldForm extends Form
     /**
      * Store the product.
      *
-     * @return \App\Models\Product
+     * @return void
      */
     public function store(): Product
     {
         $this->validate();
 
-        dd($this->pull());
-        //        $product = Product::create(
-        //            $this->pull()
-        //        );
+        $product = Product::create([
+            ...$this->only(['brand_id', 'type_id', 'name', 'slug', 'grams']),
+            'additional_sell_price' => intval(removeAlphabets($this->additional_sell_price)),
+            'additional_buy_price' => intval(removeAlphabets($this->additional_buy_price)),
+        ]);
 
-        //        $this->reset();
+        $this->reset();
 
         return $product;
     }

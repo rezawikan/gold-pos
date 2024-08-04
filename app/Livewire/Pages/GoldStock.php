@@ -2,8 +2,12 @@
 
 namespace App\Livewire\Pages;
 
+use App\Livewire\Forms\GoldForm;
+use App\Services\BrandService;
 use App\Services\CrawlerService;
 use App\Services\ProductService;
+use App\Services\TypeService;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -47,25 +51,35 @@ class GoldStock extends Component
 
     public bool $goldStockModal = false;
 
-    protected $productService;
+    public GoldForm $form;
+
+    public $types;
+
+    public $brands;
+
+    protected BrandService $brandService;
+
+    protected TypeService $typeService;
+
+    protected ProductService $productService;
 
     protected $crawlerService;
 
-    public function boot(ProductService $productService, CrawlerService $crawlerService): void
+    public function boot(ProductService $productService, CrawlerService $crawlerService, BrandService $brandService, TypeService $typeService): void
     {
         $this->crawlerService = $crawlerService;
         $this->productService = $productService;
+        $this->brandService = $brandService;
+        $this->typeService = $typeService;
         $this->today = now()->format('Y-m-d');
     }
 
-    #[On('refresh-products')]
-    public function refresh(string $status, string $statusType): void
+    public function mount(): void
     {
-        $this->status = $status;
-        $this->statusType = $statusType;
+        $this->types = $this->typeService->all();
+        $this->brands = $this->brandService->all();
     }
 
-    // TODO
     public function openModal($isEditMode = false): void
     {
         $this->goldStockModal = true;
@@ -106,6 +120,42 @@ class GoldStock extends Component
     }
 
     /**
+     * Generate the slug.
+     *
+     * @return void
+     */
+    public function generateSlug(): void
+    {
+        $this->form->slug = Str::slug($this->form->name);
+    }
+
+    /**
+     * Add the stock.
+     *
+     * @return void
+     */
+    public function addStock(): void
+    {
+        $product = $this->form->store();
+        $this->goldStockModal = false;
+
+        $this->redirectRoute('update-gold', ['id' => $product->id]);
+    }
+
+    /**
+     * Generate the delimiters.
+     *
+     * @param  string  $form
+     * @param  string  $type
+     * @return void
+     */
+    public function generateDelimiters(string $form, string $type): void
+    {
+        $removeDot = str_replace('.', '', $this->{$form}->{$type});
+        $this->{$form}->{$type} = numberFormatter($removeDot);
+    }
+
+    /**
      * Get the Antam price list from the specified URL.
      *
      * @return void
@@ -119,6 +169,13 @@ class GoldStock extends Component
         }
 
         $this->refresh(status: 'The price has been updated', statusType: 'success');
+    }
+
+    #[On('refresh-products')]
+    public function refresh(string $status, string $statusType): void
+    {
+        $this->status = $status;
+        $this->statusType = $statusType;
     }
 
     #[Layout('components.layouts.app')]

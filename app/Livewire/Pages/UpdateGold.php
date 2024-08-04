@@ -16,8 +16,6 @@ class UpdateGold extends Component
 {
     public $product;
 
-    public $isEditMode = false;
-
     public $editStockModal = false;
 
     public $deleteStockModal = false;
@@ -51,9 +49,9 @@ class UpdateGold extends Component
     protected TypeService $typeService;
 
     /**
-     * @param  \App\Services\ProductService  $productService
-     * @param  \App\Services\BrandService  $brandService
-     * @param  \App\Services\TypeService  $typeService
+     * @param  ProductService  $productService
+     * @param  BrandService  $brandService
+     * @param  TypeService  $typeService
      * @return void
      */
     public function boot(ProductService $productService, BrandService $brandService, TypeService $typeService): void
@@ -68,7 +66,6 @@ class UpdateGold extends Component
         $this->product = $this->productService->find($id);
         $this->form->setProduct($this->product);
         $this->form->setProductItems($this->product->product_items()->get());
-        $this->isEditMode = true;
 
         $this->types = $this->typeService->all();
         $this->brands = $this->brandService->all();
@@ -77,18 +74,6 @@ class UpdateGold extends Component
     public function generateSlug(): void
     {
         $this->form->slug = Str::slug($this->form->name);
-    }
-
-    public function save(): void
-    {
-        if ($this->isEditMode) {
-            $this->form->update();
-        } else {
-            $this->form->store();
-        }
-
-        session()->flash('status', 'Successfully updated the gold');
-        $this->redirectRoute('gold-stock');
     }
 
     public function updateStock(): void
@@ -102,6 +87,14 @@ class UpdateGold extends Component
             $this->stockForm->store();
             $this->dispatch('refresh-stock', status: 'Successfully added the stock', statusType: 'success');
         }
+    }
+
+    public function update(): void
+    {
+        $this->form->update();
+
+        session()->flash('status', 'Successfully updated the gold');
+        $this->redirectRoute('gold-stock');
     }
 
     public function generateDelimiters(string $form, string $type): void
