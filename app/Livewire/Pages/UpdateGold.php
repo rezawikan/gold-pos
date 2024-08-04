@@ -98,6 +98,9 @@ class UpdateGold extends Component
         if ($this->isEditModeStock) {
             $this->stockForm->update();
             $this->dispatch('refresh-stock', status: 'Successfully updated the stock', statusType: 'success');
+        } else {
+            $this->stockForm->store();
+            $this->dispatch('refresh-stock', status: 'Successfully added the stock', statusType: 'success');
         }
     }
 
@@ -105,6 +108,13 @@ class UpdateGold extends Component
     {
         $removeDot = str_replace('.', '', $this->{$form}->{$type});
         $this->{$form}->{$type} = numberFormatter($removeDot);
+    }
+
+    public function openAddModal(): void
+    {
+        $this->editStockModal = true;
+        $this->isEditModeStock = false;
+        $this->stockForm->productId = $this->product->id;
     }
 
     public function openEditModal(int $id, bool $isEditModeModal = false): void

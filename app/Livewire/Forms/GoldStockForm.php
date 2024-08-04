@@ -10,6 +10,8 @@ class GoldStockForm extends Form
 {
     public ?ProductItem $productItem;
 
+    public $productId;
+
     public $isEditMode = false;
 
     #[Validate('required')]
@@ -44,6 +46,24 @@ class GoldStockForm extends Form
         $this->productItem->update([
             ...$this->only('stock'),
             'based_price' => removeAlphabets($this->basedPrice),
+        ]);
+
+        $this->reset();
+    }
+
+    /**
+     * Store the gold stock.
+     *
+     * @return void
+     */
+    public function store(): void
+    {
+        $this->validate();
+
+        ProductItem::create([
+            ...$this->only('stock'),
+            'based_price' => removeAlphabets($this->basedPrice),
+            'product_id' => $this->productId,
         ]);
 
         $this->reset();

@@ -46,32 +46,33 @@
     <x-table
         :headers="$headers"
         :rows="$products"
+        link="/gold-stock/update/{id}"
         with-pagination
         :sort-by="$sortBy">
         @scope("cell_sell_price", $product)
-            {{ currencyFormatterIDR($product->sell_price) }}
+        {{ currencyFormatterIDR($product->sell_price) }}
         @endscope
 
         @scope("cell_buy_price", $product)
-            {{ currencyFormatterIDR($product->buy_price) }}
+        {{ currencyFormatterIDR($product->buy_price) }}
         @endscope
 
         @scope("cell_stock", $product)
-            {{ numberFormatter($product->stock) }}
+        {{ numberFormatter($product->stock) }}
         @endscope
 
         @scope("cell_price_updated_at", $product)
-            <div class="flex items-center">
-                {{ $product->price_updated_at ? $product->price_updated_at->format("d M Y H:i:s") : "No Data" }}
-                <div
-                    class="{{ now()->format("Y-m-d") == $product->price_updated_at?->format("Y-m-d") ? "text-green-500" : "text-red-500" }} pl-2">
-                    @if (now()->format("Y-m-d") == $product->price_updated_at?->format("Y-m-d"))
-                        <x-icon name="m-check-circle" />
-                    @else
-                        <x-icon name="s-x-circle" />
-                    @endif
-                </div>
+        <div class="flex items-center">
+            {{ $product->price_updated_at ? $product->price_updated_at->format("d M Y H:i:s") : "No Data" }}
+            <div
+                class="{{ now()->format("Y-m-d") == $product->price_updated_at?->format("Y-m-d") ? "text-green-500" : "text-red-500" }} pl-2">
+                @if (now()->format("Y-m-d") == $product->price_updated_at?->format("Y-m-d"))
+                    <x-icon name="m-check-circle" />
+                @else
+                    <x-icon name="s-x-circle" />
+                @endif
             </div>
+        </div>
         @endscope
     </x-table>
 
@@ -131,9 +132,9 @@
 </div>
 
 @script
-    <script>
-        $wire.on('refresh-products', () => {
-            $wire.$refresh();
-        });
-    </script>
+<script>
+    $wire.on('refresh-products', () => {
+        $wire.$refresh();
+    });
+</script>
 @endscript

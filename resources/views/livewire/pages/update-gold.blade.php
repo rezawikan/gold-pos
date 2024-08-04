@@ -76,6 +76,14 @@
             subtitle="Keeping an eye on current stock levels helps businesses manage inventory efficiently."
             shadow
             separator>
+            <x-slot:menu>
+                <x-button
+                    icon="o-plus"
+                    class="cursor-pointer"
+                    class="btn-sm"
+                    wire:click="openAddModal"
+                />
+            </x-slot:menu>
             @if ($statusStock && $statusTypeStock)
                 <x-alert
                     icon="o-exclamation-triangle"
@@ -90,28 +98,31 @@
                 :rows="$form->product_items"
                 show-empty-text
                 empty-text="Out of Stock!">
+                @scope("cell_id", $product_item)
+                {{ $loop->index + 1 }}
+                @endscope
                 @scope("cell_based_price", $product_item)
-                    {{ currencyFormatterIDR($product_item->based_price) }}
+                {{ currencyFormatterIDR($product_item->based_price) }}
                 @endscope
 
                 @scope("cell_stock", $product_item)
-                    {{ numberFormatter($product_item->stock) }}
+                {{ numberFormatter($product_item->stock) }}
                 @endscope
 
                 @scope("actions", $product_item)
-                    <div class="flex gap-2">
-                        <x-button
-                            icon="s-pencil-square"
-                            wire:click="openEditModal({{ $product_item->id }}, true)"
-                            spinner
-                            class="btn-sm"
-                            inli />
-                        <x-button
-                            icon="o-trash"
-                            spinner
-                            class="btn-sm"
-                            wire:click="openDeleteModal({{ $product_item->id }})" />
-                    </div>
+                <div class="flex gap-2">
+                    <x-button
+                        icon="s-pencil-square"
+                        wire:click="openEditModal({{ $product_item->id }}, true)"
+                        spinner
+                        class="btn-sm"
+                        inline />
+                    <x-button
+                        icon="o-trash"
+                        spinner
+                        class="btn-sm"
+                        wire:click="openDeleteModal({{ $product_item->id }})" />
+                </div>
                 @endscope
             </x-table>
         </x-card>
@@ -136,7 +147,7 @@
     <x-modal
         wire:model="editStockModal"
         class="backdrop-blur"
-        title="Update Gold Stock"
+        :title="$isEditModeStock ? 'Edit' : 'Add' . ' Gold Stock'"
         subtitle="Stock for {{ $product?->name }}"
         persistent>
         <x-form wire:submit="updateStock">
@@ -153,7 +164,7 @@
                     label="Cancel"
                     @click="$wire.editStockModal = false" />
                 <x-button
-                    label="Update"
+                    :label="$isEditModeStock ? 'Update' : 'Add'"
                     class="btn-primary"
                     type="submit"
                     spinner="updateStock" />
