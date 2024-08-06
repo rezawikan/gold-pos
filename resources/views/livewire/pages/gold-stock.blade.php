@@ -46,7 +46,6 @@
     <x-table
         :headers="$headers"
         :rows="$products"
-        link="/gold-stock/update/{id}"
         with-pagination
         :sort-by="$sortBy">
         @scope("cell_sell_price", $product)
@@ -74,16 +73,24 @@
             </div>
         </div>
         @endscope
+
+        {{-- Special `actions` slot --}}
+        @scope('actions', $product)
+        <div class="flex gap-2">
+            <x-button link="{{ route('update-gold', $product->id) }}" icon="s-pencil-square" spinner class="btn-sm" />
+            <x-button icon="o-trash" spinner class="btn-sm" inline />
+        </div>
+        @endscope
+
     </x-table>
 
     <x-modal
         wire:model="goldStockModal"
         class="backdrop-blur"
         persistent
-        title="Add Stock Gold"
-        subtitle="asd"
+        title="Add Gold"
+        subtitle="add new gold stock"
         separator>
-        {{ json_encode($form) }}
         <x-form wire:submit.prevent="addStock">
             <x-input
                 label="Name"
@@ -147,7 +154,7 @@
                     class="btn-primary"
                     type="submit"
                     spinner="save" />
-                <x-button label="Cancel" @click="$wire.customerModal = false" />
+                <x-button label="Cancel" @click="$wire.goldStockModal = false" />
             </x-slot>
         </x-form>
     </x-modal>

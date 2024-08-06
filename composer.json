@@ -76,15 +76,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": {
-        "robsontenorio/mary": {
-            "type": "path",
-            "url": "../mary",
-            "options": {
-                "symlink": true
-            }
-        }
-    }
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

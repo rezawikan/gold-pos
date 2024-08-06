@@ -15,7 +15,7 @@ class CrawlerService
      */
     public function getAntamPriceList(): void
     {
-        $process = new Process(['node', '../resources/puppeteer/AntamCrawler.js']);
+        $process = Process::fromShellCommandline('node ../resources/puppeteer/AntamCrawler.js');
         $process->run();
 
         // executes after the command finishes
