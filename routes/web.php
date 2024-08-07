@@ -11,6 +11,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //    Route::view('profile', 'profile')
     //        ->name('profile');
     Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index']);
+    Route::get('/dashboard', \App\Livewire\Pages\Dashboard::class)->name('dashboard');
     Route::get('/gold-stock', \App\Livewire\Pages\GoldStock::class)->name('gold-stock');
     Route::get('/orders/create', \App\Livewire\Pages\CreateOrder::class)->name('create-order');
     Route::get('/orders', \App\Livewire\Pages\Order::class)->name('orders');

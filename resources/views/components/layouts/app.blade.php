@@ -51,7 +51,7 @@
                 {{-- MENU --}}
                 <x-menu activate-by-route>
                     {{-- User --}}
-                    @if ($user = auth()->user())
+                    @if (($user = auth()->user()))
                         <x-menu-separator />
 
                         <x-list-item
@@ -77,7 +77,7 @@
                     <x-menu-item
                         title="Dashboard"
                         icon="o-chart-pie"
-                        link="/" />
+                        link="{{ route('dashboard') }}" />
                     <x-menu-item
                         title="Gold Stock"
                         icon="o-cube"
