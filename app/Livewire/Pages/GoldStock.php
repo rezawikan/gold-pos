@@ -34,8 +34,11 @@ class GoldStock extends Component
 
     public $filters = [
         'hide_stock' => false,
+        'all_stock' => false
     ];
 
+    public bool $isReadyForSale = true;
+    
     public $filterCount = 0;
 
     public $pageTitle = 'Gold Stock';
@@ -93,29 +96,19 @@ class GoldStock extends Component
      */
     public function applyFilters(): void
     {
-        foreach ($this->filters as $key => $value) {
-            if ($key == 'hide_stock' && $value) {
-
-                $this->headers = array_map(function ($header) {
-                    if ($header['key'] == 'stock') {
-                        return ['key' => 'stock', 'label' => 'Stock', 'hidden' => true];
-                    }
-
-                    return $header;
-                }, $this->headers);
-
-                $this->filterCount++;
-            } else {
-                $this->headers = array_map(function ($header) {
-                    if ($header['key'] == 'stock') {
-                        return ['key' => 'stock', 'label' => 'Stock', 'hidden' => false];
-                    }
-
-                    return $header;
-                }, $this->headers);
-                $this->filterCount--;
+        $this->headers = array_map(function ($header) {
+            if ($header['key'] == 'stock') {
+                $header['hidden'] = $this->filters['hide_stock'];
+                $this->filterCount += $this->filters['hide_stock'] ? 1 : -1;
             }
-        }
+
+            if ($header['key'] == 'all_stock') {
+                $this->isReadyForSale = !$this->filters['all_stock'];
+                $this->filterCount += $this->filters['all_stock'] ? 1 : -1;
+            }
+            return $header;
+        }, $this->headers);
+
 
         $this->showDrawerFilter = false;
     }
@@ -189,6 +182,6 @@ class GoldStock extends Component
 
     public function getProducts()
     {
-        return $this->productService->all($this->search, $this->sortBy, true, true);
+        return $this->productService->all($this->search, $this->sortBy, true, $this->isReadyForSale);
     }
 }

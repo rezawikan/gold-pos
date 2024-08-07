@@ -171,6 +171,10 @@
                 label="Hide Stock Column"
                 wire:model="filters.hide_stock"
                 hint="You can hide this column" />
+            <x-checkbox
+                label="Get All Stock"
+                wire:model="filters.all_stock"
+                hint="You can show all stocks" />
 
             <x-slot:actions>
                 <x-button label="Cancel" />
