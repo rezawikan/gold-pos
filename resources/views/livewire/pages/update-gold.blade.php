@@ -161,14 +161,14 @@
         <x-form wire:submit="updateStock">
             <x-input
                 label="Based Price"
-                wire:keyup="generateDelimiters('stockForm','basedPrice')"
+                wire:keyup.debounce.500ms="generateDelimiters('stockForm','basedPrice')"
                 wire:model="stockForm.basedPrice" />
             <x-input
                 label="Stock"
                 wire:model="stockForm.stock"
-                wire:keyup="generateDelimiters('stockForm','stock')" />
+                wire:keyup.debounce.500ms="generateDelimiters('stockForm','stock')" />
             <x-datepicker
-                label="Month"
+                label="Purchase Date"
                 wire:model="stockForm.purchaseDate"
                 icon="o-calendar"
                 :config="$datePickerOptions" />

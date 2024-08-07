@@ -25,46 +25,33 @@ class ProductRepository implements ProductRepositoryInterface
         $products = Product::leftJoin('product_prices AS current_record', function ($join) {
             $join->on('products.id', '=', 'current_record.product_id')
                 ->whereDate('current_record.date', '=', DB::raw('CURDATE()'));
-        })
-            ->leftJoin('product_prices AS latest_record', function ($join) {
-                $join->on('products.id', '=', 'latest_record.product_id')
-                    ->where('latest_record.date', '=', function ($query) {
-                        $query->select(DB::raw('MAX(date)'))
-                            ->from('product_prices')
-                            ->whereColumn('product_id', 'latest_record.product_id')
-                            ->latest('latest_record.date');
-                    });
-            })->when($isReadyForSale, function ($query) {
-                $query->leftJoin('product_items AS PI', function ($join) {
-                    $join->on('products.id', '=', 'PI.product_id')
-                        ->where('PI.based_price', '<=', function ($query) {
-                            $query->select('sell_price')
-                                ->from('product_prices')
-                                ->whereColumn('product_id', 'product_prices.product_id')
-                                ->value('sell_price');
-                        });
+        })->leftJoin('product_prices AS latest_record', function ($join) {
+            $join->on('products.id', '=', 'latest_record.product_id')
+                ->where('latest_record.date', '=', function ($query) {
+                    $query->select(DB::raw('MAX(date)'))
+                        ->from('product_prices')
+                        ->whereColumn('product_id', 'latest_record.product_id')
+                        ->latest('latest_record.date');
                 });
-            })->when(! $isReadyForSale, function ($query) {
-                $query->leftJoin('product_items AS PI', 'products.id', '=', 'PI.product_id');
-            })
+            })->leftJoin('product_items AS PI', 'products.id', '=', 'PI.product_id')
             ->leftJoin('brands AS BA', 'products.brand_id', '=', 'BA.id')
             ->leftJoin('types AS TP', 'products.type_id', '=', 'TP.id')
             ->where('products.name', 'like', '%'.$searchText.'%')
             ->groupBy('products.id', 'products.name', 'products.additional_sell_price', 'products.additional_buy_price', 'products.grams')
             ->orderBy(...array_values($sortBy))
-            ->selectRaw('
-            products.id,
-            products.name,
-            BA.name AS product_brand,
-            TP.name AS product_type,
-            products.grams,
-            COALESCE(MAX(current_record.sell_price), MAX(latest_record.sell_price)) AS sell_price,
-            COALESCE(MAX(current_record.buy_price), MAX(latest_record.buy_price)) AS buy_price,
-            COALESCE(MAX(current_record.date), MAX(latest_record.date)) AS price_updated_at,
-            COALESCE(SUM(PI.stock), 0) AS stock,
-            products.updated_at,
-            products.created_at
-        ')
+            ->selectRaw("
+                products.id,
+                products.name,
+                BA.name AS product_brand,
+                TP.name AS product_type,
+                products.grams,
+                COALESCE(MAX(current_record.sell_price), MAX(latest_record.sell_price)) AS sell_price,
+                COALESCE(MAX(current_record.buy_price), MAX(latest_record.buy_price)) AS buy_price,
+                COALESCE(MAX(current_record.date), MAX(latest_record.date)) AS price_updated_at,
+                COALESCE(SUM(CASE WHEN PI.based_price <= current_record.sell_price OR NOT '$isReadyForSale' THEN PI.stock ELSE 0 END), 0) AS stock,
+                products.updated_at,
+                products.created_at
+            ")
             ->withCasts([
                 'price_updated_at' => 'datetime',
                 'created_at' => 'datetime',
