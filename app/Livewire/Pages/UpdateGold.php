@@ -36,11 +36,18 @@ class UpdateGold extends Component
         ['key' => 'id', 'label' => 'ID'],
         ['key' => 'based_price', 'label' => 'Based Price'],
         ['key' => 'stock', 'label' => 'Stock'],
+        ['key' => 'purchase_date', 'label' => 'Purchase Date'],
     ];
 
     public $types;
 
     public $brands;
+
+    public $datePickerOptions = [
+        'enableTime' => true,
+        'enableSeconds' => true,
+        'dateFormat' => 'Y-m-d H:i:s',
+    ];
 
     protected ProductService $productService;
 
@@ -121,6 +128,13 @@ class UpdateGold extends Component
     {
         $this->deleteStockModal = true;
         $this->selectedItemForDelete = $this->product->product_items()->find($id);
+    }
+
+    public function closeEditModal(): void
+    {
+        $this->editStockModal = false;
+        $this->stockForm->reset();
+        $this->isEditModeStock = false;
     }
 
     public function deleteProductItem(): void

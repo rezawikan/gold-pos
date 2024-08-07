@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\ProductItem;
+use DateTime;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -20,6 +21,9 @@ class GoldStockForm extends Form
     #[Validate('required')]
     public $stock;
 
+    #[Validate('required')]
+    public $purchaseDate;
+
     /**
      * Set the product item.
      *
@@ -32,6 +36,7 @@ class GoldStockForm extends Form
         $this->isEditMode = true;
         $this->basedPrice = numberFormatter($productItem->based_price);
         $this->stock = numberFormatter($productItem->stock);
+        $this->purchaseDate = $productItem->purchase_date;
     }
 
     /**
@@ -46,6 +51,7 @@ class GoldStockForm extends Form
         $this->productItem->update([
             ...$this->only('stock'),
             'based_price' => removeAlphabets($this->basedPrice),
+            'purchase_date' => $this->purchaseDate,
         ]);
 
         $this->reset();
@@ -55,6 +61,7 @@ class GoldStockForm extends Form
      * Store the gold stock.
      *
      * @return void
+     * @throws \Exception
      */
     public function store(): void
     {
@@ -64,6 +71,7 @@ class GoldStockForm extends Form
             ...$this->only('stock'),
             'based_price' => removeAlphabets($this->basedPrice),
             'product_id' => $this->productId,
+            'purchase_date' => new DateTime($this->purchaseDate),
         ]);
 
         $this->reset();

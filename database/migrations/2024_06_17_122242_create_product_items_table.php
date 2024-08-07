@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->integer('based_price');
             $table->integer('stock');
+            $table->dateTime('purchase_date');
             $table->timestamps();
         });
     }

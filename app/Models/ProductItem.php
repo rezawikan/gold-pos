@@ -18,7 +18,20 @@ class ProductItem extends Model
         'product_id',
         'based_price',
         'stock',
+        'purchase_date',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'purchase_date' => 'datetime',
+        ];
+    }
 
     /**
      * Indicates if the model should be timestamped.

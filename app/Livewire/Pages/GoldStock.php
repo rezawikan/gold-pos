@@ -29,6 +29,7 @@ class GoldStock extends Component
         ['key' => 'sell_price', 'label' => 'Sell Price'],
         ['key' => 'buy_price', 'label' => 'Buy Price'],
         ['key' => 'price_updated_at', 'label' => 'Last Update'],
+        ['key' => 'actions', 'label' => 'Actions'],
     ];
 
     public $filters = [

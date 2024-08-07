@@ -85,9 +85,8 @@
                     icon="o-plus"
                     class="cursor-pointer"
                     class="btn-sm"
-                    wire:click="openAddModal"
-                />
-            </x-slot:menu>
+                    wire:click="openAddModal" />
+            </x-slot>
             @if ($statusStock && $statusTypeStock)
                 <x-alert
                     icon="o-exclamation-triangle"
@@ -103,30 +102,35 @@
                 show-empty-text
                 empty-text="Out of Stock!">
                 @scope("cell_id", $product_item)
-                {{ $loop->index + 1 }}
+                    {{ $loop->index + 1 }}
                 @endscope
+
                 @scope("cell_based_price", $product_item)
-                {{ currencyFormatterIDR($product_item->based_price) }}
+                    {{ currencyFormatterIDR($product_item->based_price) }}
                 @endscope
 
                 @scope("cell_stock", $product_item)
-                {{ numberFormatter($product_item->stock) }}
+                    {{ numberFormatter($product_item->stock) }}
+                @endscope
+
+                @scope("cell_purchase_date", $product_item)
+                    {{ $product_item->purchase_date->format("d-m-Y H:i") }}
                 @endscope
 
                 @scope("actions", $product_item)
-                <div class="flex gap-2">
-                    <x-button
-                        icon="s-pencil-square"
-                        wire:click="openEditModal({{ $product_item->id }}, true)"
-                        spinner
-                        class="btn-sm"
-                        inline />
-                    <x-button
-                        icon="o-trash"
-                        spinner
-                        class="btn-sm"
-                        wire:click="openDeleteModal({{ $product_item->id }})" />
-                </div>
+                    <div class="flex gap-2">
+                        <x-button
+                            icon="s-pencil-square"
+                            wire:click="openEditModal({{ $product_item->id }}, true)"
+                            spinner
+                            class="btn-sm"
+                            inline />
+                        <x-button
+                            icon="o-trash"
+                            spinner
+                            class="btn-sm"
+                            wire:click="openDeleteModal({{ $product_item->id }})" />
+                    </div>
                 @endscope
             </x-table>
         </x-card>
@@ -163,10 +167,13 @@
                 label="Stock"
                 wire:model="stockForm.stock"
                 wire:keyup="generateDelimiters('stockForm','stock')" />
+            <x-datepicker
+                label="Month"
+                wire:model="stockForm.purchaseDate"
+                icon="o-calendar"
+                :config="$datePickerOptions" />
             <x-slot:actions>
-                <x-button
-                    label="Cancel"
-                    @click="$wire.editStockModal = false" />
+                <x-button label="Cancel" @click="$wire.closeEditModal" />
                 <x-button
                     :label="$isEditModeStock ? 'Update' : 'Add'"
                     class="btn-primary"
