@@ -33,7 +33,7 @@ class ProductRepository implements ProductRepositoryInterface
                         ->whereColumn('product_id', 'latest_record.product_id')
                         ->latest('latest_record.date');
                 });
-            })->leftJoin('product_items AS PI', 'products.id', '=', 'PI.product_id')
+        })->leftJoin('product_items AS PI', 'products.id', '=', 'PI.product_id')
             ->leftJoin('brands AS BA', 'products.brand_id', '=', 'BA.id')
             ->leftJoin('types AS TP', 'products.type_id', '=', 'TP.id')
             ->where('products.name', 'like', '%'.$searchText.'%')
@@ -48,7 +48,7 @@ class ProductRepository implements ProductRepositoryInterface
                 COALESCE(MAX(current_record.sell_price), MAX(latest_record.sell_price)) AS sell_price,
                 COALESCE(MAX(current_record.buy_price), MAX(latest_record.buy_price)) AS buy_price,
                 COALESCE(MAX(current_record.date), MAX(latest_record.date)) AS price_updated_at,
-                COALESCE(SUM(CASE WHEN PI.based_price <= current_record.sell_price OR NOT '$isReadyForSale' THEN PI.stock ELSE 0 END), 0) AS stock,
+                COALESCE(SUM(CASE WHEN PI.based_price <= COALESCE(current_record.sell_price, latest_record.buy_price, 0) OR NOT '$isReadyForSale' THEN PI.stock ELSE 0 END), 0) AS stock,
                 products.updated_at,
                 products.created_at
             ")

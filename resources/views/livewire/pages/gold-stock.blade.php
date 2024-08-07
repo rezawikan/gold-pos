@@ -169,11 +169,13 @@
         <x-form wire:submit="applyFilters">
             <x-checkbox
                 label="Hide Stock Column"
-                wire:model="filters.hide_stock"
+                wire:model="filters"
+                value="hide_stock"
                 hint="You can hide this column" />
             <x-checkbox
                 label="Get All Stock"
-                wire:model="filters.all_stock"
+                wire:model="filters"
+                value="all_stock"
                 hint="You can show all stocks" />
 
             <x-slot:actions>

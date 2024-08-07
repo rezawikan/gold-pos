@@ -37,6 +37,8 @@ class UpdateGold extends Component
         ['key' => 'based_price', 'label' => 'Based Price'],
         ['key' => 'stock', 'label' => 'Stock'],
         ['key' => 'purchase_date', 'label' => 'Purchase Date'],
+        ['key' => 'status_color', 'label' => 'Indicator', 'class' => 'flex justify-center'],
+        ['key' => 'actions', 'label' => 'Actions'],
     ];
 
     public $types;
@@ -72,7 +74,29 @@ class UpdateGold extends Component
     {
         $this->product = $this->productService->find($id);
         $this->form->setProduct($this->product);
-        $this->form->setProductItems($this->product->product_items()->get());
+        $this->form->setProductItems(
+            $this->product->product_items()
+                ->leftJoin('product_prices', function ($join) {
+                    $join->on('product_items.product_id', '=', 'product_prices.product_id')
+                        ->where('product_prices.date', '=', function ($query) {
+                            $query->selectRaw('MAX(date)')
+                                ->from('product_prices')
+                                ->whereColumn('product_id', 'product_prices.product_id');
+                        });
+                })
+                ->selectRaw("
+                    product_items.*, 
+                    CASE 
+                        WHEN (product_prices.sell_price - product_items.based_price) < 5000 THEN 'zinc'
+                        WHEN (product_prices.sell_price - product_items.based_price) BETWEEN 1000 AND 10000 THEN 'red'
+                        WHEN (product_prices.sell_price - product_items.based_price) BETWEEN 10001 AND 20000 THEN 'orange'
+                        WHEN (product_prices.sell_price - product_items.based_price) BETWEEN 20001 AND 50000 THEN 'yellow'
+                        WHEN (product_prices.sell_price - product_items.based_price) BETWEEN 50001 AND 100000 THEN 'green'
+                        ELSE 'blue'
+                    END as status_color
+                ")
+                ->get()
+        );
 
         $this->types = $this->typeService->all();
         $this->brands = $this->brandService->all();

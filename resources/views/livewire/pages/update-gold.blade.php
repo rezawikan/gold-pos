@@ -1,7 +1,9 @@
 <div>
     <x-header title="Update Product" subtitle="{{$product?->name}}"></x-header>
-    <div class="grid grid-cols-2 gap-4">
+
+    <div class="grid grid-cols-5 gap-4">
         <x-card
+            class="col-span-2"
             title="Selected Product"
             subtitle="Update your detail here"
             shadow
@@ -76,6 +78,7 @@
 
         <!-- ... -->
         <x-card
+            class="col-span-3"
             title="Current Stock"
             subtitle="Keeping an eye on current stock levels helps businesses manage inventory efficiently."
             shadow
@@ -117,7 +120,13 @@
                     {{ $product_item->purchase_date->format("d-m-Y H:i") }}
                 @endscope
 
-                @scope("actions", $product_item)
+                @scope("cell_status_color", $product_item)
+                    <div
+                        class="bg-{{ $product_item->status_color }}-500 flex h-5 w-5 justify-center rounded-full"></div>
+                @endscope
+
+                @scope("cell_actions", $product_item)
+                    {{ $product_item->status }}
                     <div class="flex gap-2">
                         <x-button
                             icon="s-pencil-square"

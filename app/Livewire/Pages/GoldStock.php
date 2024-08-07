@@ -32,13 +32,10 @@ class GoldStock extends Component
         ['key' => 'actions', 'label' => 'Actions'],
     ];
 
-    public $filters = [
-        'hide_stock' => false,
-        'all_stock' => false
-    ];
+    public array $filters = [];
 
     public bool $isReadyForSale = true;
-    
+
     public $filterCount = 0;
 
     public $pageTitle = 'Gold Stock';
@@ -98,18 +95,14 @@ class GoldStock extends Component
     {
         $this->headers = array_map(function ($header) {
             if ($header['key'] == 'stock') {
-                $header['hidden'] = $this->filters['hide_stock'];
-                $this->filterCount += $this->filters['hide_stock'] ? 1 : -1;
+                $header['hidden'] = in_array('hide_stock', $this->filters);
             }
 
-            if ($header['key'] == 'all_stock') {
-                $this->isReadyForSale = !$this->filters['all_stock'];
-                $this->filterCount += $this->filters['all_stock'] ? 1 : -1;
-            }
             return $header;
         }, $this->headers);
 
-
+        $this->isReadyForSale = !in_array('all_stock', $this->filters);
+        $this->filterCount = count($this->filters);
         $this->showDrawerFilter = false;
     }
 

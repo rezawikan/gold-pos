@@ -7,6 +7,14 @@ export default {
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./vendor/robsontenorio/mary/src/View/Components/**/*.php",
     ],
+    safelist: [
+        "bg-zinc-500",
+        "bg-red-500",
+        "bg-yellow-500",
+        "bg-orange-500",
+        "bg-green-500",
+        "bg-blue-500",
+    ],
     plugins: [require("@tailwindcss/typography"), require("daisyui")],
     darkMode: "class",
     daisyui: {
