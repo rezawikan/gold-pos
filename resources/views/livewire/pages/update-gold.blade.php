@@ -99,6 +99,13 @@
                 </x-alert>
             @endif
 
+            <div class="flex flex-wrap gap-2">
+                @foreach ($indicators as $key => $indicator)
+                    <x-badge
+                        :value="$indicator"
+                        class="bg-{{ $key }}-500 py-4 text-white" />
+                @endforeach
+            </div>
             <x-table
                 :headers="$productItemHeaders"
                 :rows="$form->product_items"

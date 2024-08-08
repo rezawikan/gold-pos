@@ -51,6 +51,16 @@ class UpdateGold extends Component
         'dateFormat' => 'Y-m-d H:i:s',
     ];
 
+    public $indicators = [
+        'zinc' => 'Not Available',
+        'red' => 'Between 0 and 5',
+        'orange' => 'Between 5.1 and 10',
+        'emerald' => 'Between 10.1 and 20',
+        'sky' => 'Between 20.1 and 50',
+        'violet' => 'Between 50.1 and 100',
+        'pink' => 'More than 100',
+    ];
+
     protected ProductService $productService;
 
     protected BrandService $brandService;
@@ -75,27 +85,7 @@ class UpdateGold extends Component
         $this->product = $this->productService->find($id);
         $this->form->setProduct($this->product);
         $this->form->setProductItems(
-            $this->product->product_items()
-                ->leftJoin('product_prices', function ($join) {
-                    $join->on('product_items.product_id', '=', 'product_prices.product_id')
-                        ->where('product_prices.date', '=', function ($query) {
-                            $query->selectRaw('MAX(date)')
-                                ->from('product_prices')
-                                ->whereColumn('product_id', 'product_prices.product_id');
-                        });
-                })
-                ->selectRaw("
-                    product_items.*, 
-                    CASE 
-                        WHEN (product_prices.sell_price - product_items.based_price) < 5000 THEN 'zinc'
-                        WHEN (product_prices.sell_price - product_items.based_price) BETWEEN 1000 AND 10000 THEN 'red'
-                        WHEN (product_prices.sell_price - product_items.based_price) BETWEEN 10001 AND 20000 THEN 'orange'
-                        WHEN (product_prices.sell_price - product_items.based_price) BETWEEN 20001 AND 50000 THEN 'yellow'
-                        WHEN (product_prices.sell_price - product_items.based_price) BETWEEN 50001 AND 100000 THEN 'green'
-                        ELSE 'blue'
-                    END as status_color
-                ")
-                ->get()
+            $this->product->product_items()->indicator()->get()
         );
 
         $this->types = $this->typeService->all();
