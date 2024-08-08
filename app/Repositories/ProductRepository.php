@@ -48,7 +48,7 @@ class ProductRepository implements ProductRepositoryInterface
                 COALESCE(MAX(current_record.sell_price), MAX(latest_record.sell_price)) AS sell_price,
                 COALESCE(MAX(current_record.buy_price), MAX(latest_record.buy_price)) AS buy_price,
                 COALESCE(MAX(current_record.date), MAX(latest_record.date)) AS price_updated_at,
-                COALESCE(SUM(CASE WHEN PI.based_price <= COALESCE(current_record.sell_price, latest_record.buy_price, 0) OR NOT '$isReadyForSale' THEN PI.stock ELSE 0 END), 0) AS stock,
+                COALESCE(SUM(CASE WHEN PI.based_price <= COALESCE(current_record.sell_price, latest_record.sell_price, 0) OR NOT '$isReadyForSale' THEN PI.stock ELSE 0 END), 0) AS stock,
                 products.updated_at,
                 products.created_at
             ")
