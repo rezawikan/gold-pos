@@ -33,7 +33,7 @@
                         - {{ $product->stock }} pcs
                     </x-slot>
                     <x-slot:actions>
-                        @if($user_searchable_id)
+                        @if ($selectedUserId)
                             <x-button
                                 label="Add"
                                 wire:click="addItem({{ $product->id }})"
@@ -45,7 +45,7 @@
         </x-card>
         <div class="col-span-3 grid grid-cols-subgrid gap-8">
             <x-card
-                class="row-span-2 col-span-3"
+                class="col-span-3 row-span-2"
                 title="Customer"
                 shadow
                 separator
@@ -86,7 +86,7 @@
                 </x-slot>
             </x-card>
             <x-card
-                class="row-span-10 col-span-3"
+                class="col-span-3 row-span-10"
                 title="Cart"
                 subtitle="Our findings about you"
                 shadow
@@ -94,58 +94,64 @@
                 @if ($carts)
                     <x-table :headers="$headers" :rows="$carts">
                         @scope("cell_quantity", $cart)
-                        <div class="relative w-40">
-                            <button
-                                class="btn btn-square btn-sm absolute left-0 top-0 rounded-r-none"
-                                wire:click="updateQuantity({{ $cart["id"] }}, {{ $cart["quantity"] }}, false)">
-                                -
-                            </button>
-                            <input
-                                type="text"
-                                class="input input-sm input-bordered w-full px-12 text-center"
-                                wire:model="carts.{{ $loop->index }}.quantity" />
-                            <button
-                                class="btn btn-square btn-sm absolute right-0 top-0 rounded-l-none"
-                                wire:click="updateQuantity({{ $cart["id"] }}, {{ $cart["quantity"] }}, true)">
-                                +
-                            </button>
-                        </div>
+                            <div class="relative w-40">
+                                <button
+                                    class="btn btn-square btn-sm absolute left-0 top-0 rounded-r-none"
+                                    wire:click="updateQuantity({{ $cart["id"] }}, {{ $cart["quantity"] }}, false)">
+                                    -
+                                </button>
+                                <input
+                                    type="text"
+                                    class="input input-sm input-bordered w-full px-12 text-center"
+                                    wire:model="carts.{{ $loop->index }}.quantity" />
+                                <button
+                                    class="btn btn-square btn-sm absolute right-0 top-0 rounded-l-none"
+                                    wire:click="updateQuantity({{ $cart["id"] }}, {{ $cart["quantity"] }}, true)">
+                                    +
+                                </button>
+                            </div>
                         @endscope
 
                         @scope("cell_sellPrice", $cart)
-                        {{ numberFormatter($cart["sellPrice"]) }}
+                            {{ numberFormatter($cart["sellPrice"]) }}
                         @endscope
 
                         @scope("cell_totalValue", $cart)
-                        {{ numberFormatter($cart["totalValue"]) }}
+                            {{ numberFormatter($cart["totalValue"]) }}
                         @endscope
                     </x-table>
-                    <div class="overflow-x-auto mt-4">
+                    <div class="mt-4 overflow-x-auto">
                         <table class="table">
                             <!-- head -->
                             <tbody>
-                            <tr>
-                                <td rowspan="3" class="w-4/6"></td>
-                                <th>Subtotal</th>
-                                <td class="text-end">{{ numberFormatter($this->getTotalPrice()) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Discount</th>
-                                <td class="text-end">{{ numberFormatter(0) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Total</th>
-                                <td class="text-end">{{ numberFormatter($this->getTotalPrice()) }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" class="text-end">
-                                    <x-button
-                                        label="Checkout"
-                                        class="btn-primary"
-                                        @click="$wire.createOrder"
-                                        spinner />
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td rowspan="3" class="w-4/6"></td>
+                                    <th>Subtotal</th>
+                                    <td class="text-end">
+                                        {{ numberFormatter($this->getTotalPrice()) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Discount</th>
+                                    <td class="text-end">
+                                        {{ numberFormatter(0) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td class="text-end">
+                                        {{ numberFormatter($this->getTotalPrice()) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end">
+                                        <x-button
+                                            label="Checkout"
+                                            class="btn-primary"
+                                            @click="$wire.createOrder"
+                                            spinner />
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -163,7 +169,7 @@
         <x-form wire:submit.prevent="selectCustomer">
             <x-choices
                 label="Start typing to search and select a customer from the list."
-                wire:model="user_searchable_id"
+                wire:model="selectedUserId"
                 :options="$usersSearchable"
                 search-function="searchCustomers"
                 debounce="1000ms"

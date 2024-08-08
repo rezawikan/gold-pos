@@ -14,7 +14,7 @@ class CreateOrder extends Component
 {
     public ?Customer $customer;
 
-    public ?int $user_searchable_id;
+    public ?int $selectedUserId;
 
     public $isCustomerModalOpen = false;
 
@@ -56,13 +56,13 @@ class CreateOrder extends Component
 
     public function updateQuantity(int $productId, int $currentQuantity, bool $isIncrement): void
     {
-        $this->cartService->updateQuantity($this->user_searchable_id, $productId, $currentQuantity, $isIncrement);
+        $this->cartService->updateQuantity($this->selectedUserId, $productId, $currentQuantity, $isIncrement);
         $this->carts = $this->getCarts();
     }
 
     public function addItem(int $productId): void
     {
-        $this->cartService->addToCart($this->user_searchable_id, $productId);
+        $this->cartService->addToCart($this->selectedUserId, $productId);
         $this->carts = $this->getCarts();
     }
 
@@ -77,7 +77,7 @@ class CreateOrder extends Component
 
     public function createOrder(): void
     {
-        $this->cartService->createOrder($this->user_searchable_id);
+        $this->cartService->createOrder($this->selectedUserId);
 
         $this->redirectRoute('orders');
     }
@@ -90,7 +90,7 @@ class CreateOrder extends Component
 
     public function selectCustomer(): void
     {
-        $this->customer = $this->customerService->find($this->user_searchable_id);
+        $this->customer = $this->customerService->find($this->selectedUserId);
         $this->isCustomerModalOpen = false;
         $this->carts = $this->getCarts();
     }
@@ -102,20 +102,20 @@ class CreateOrder extends Component
 
     public function getCarts()
     {
-        return $this->cartService->getCarts($this->user_searchable_id);
+        return $this->cartService->getCarts($this->selectedUserId);
     }
 
     public function deleteCustomer(): void
     {
         $this->customer = null;
-        $this->user_searchable_id = null;
+        $this->selectedUserId = null;
     }
 
     public function cancelCustomer(): void
     {
         $this->isCustomerModalOpen = false;
         $this->customer = null;
-        $this->user_searchable_id = null;
+        $this->selectedUserId = null;
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application
