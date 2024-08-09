@@ -101,7 +101,7 @@ class GoldStock extends Component
             return $header;
         }, $this->headers);
 
-        $this->isReadyForSale = !in_array('all_stock', $this->filters);
+        $this->isReadyForSale = ! in_array('all_stock', $this->filters);
         $this->filterCount = count($this->filters);
         $this->showDrawerFilter = false;
     }

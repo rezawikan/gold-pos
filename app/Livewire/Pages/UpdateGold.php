@@ -135,7 +135,7 @@ class UpdateGold extends Component
     {
         $this->editStockModal = true;
         $this->isEditModeStock = $isEditModeModal;
-        $this->stockForm->setProductItem($this->product->product_items()->find($id));
+        $this->stockForm->setProductItem(ProductItem::find($id));
     }
 
     public function openDeleteModal(int $id): void
@@ -149,6 +149,7 @@ class UpdateGold extends Component
         $this->editStockModal = false;
         $this->stockForm->reset();
         $this->isEditModeStock = false;
+        $this->form->setProductItems($this->product->product_items()->indicator()->get());
     }
 
     public function deleteProductItem(): void
@@ -163,7 +164,7 @@ class UpdateGold extends Component
     {
         $this->isEditModeStock = false;
         $this->editStockModal = false;
-        $this->form->setProductItems($this->product->product_items()->get());
+        $this->form->setProductItems($this->product->product_items()->indicator()->get());
         $this->statusStock = $status;
         $this->statusTypeStock = $statusType;
     }

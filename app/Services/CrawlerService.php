@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\CrawlerProcessed;
 use App\Models\Product;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -30,6 +31,9 @@ class CrawlerService
         );
 
         $this->updatePrice($decodedResult['batangan']['data'], $decodedResult['buyback_price'], 1, 1);
+
+        // Broadcast event
+        CrawlerProcessed::dispatch();
     }
 
     protected function updatePrice(array $data, int $buybackPrice, int $brandId, int $typeId): void

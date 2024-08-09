@@ -195,5 +195,9 @@
         $wire.on('refresh-products', () => {
             $wire.$refresh();
         });
+
+        Echo.channel('refresh-gold-stock').listen('CrawlerProcessed', () => {
+            $wire.$refresh();
+        });
     </script>
 @endscript

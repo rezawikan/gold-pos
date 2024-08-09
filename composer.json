@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "livewire/volt": "^1.6",
+        "pusher/pusher-php-server": "^7.2",
         "robsontenorio/mary": "dev-main"
     },
     "require-dev": {
